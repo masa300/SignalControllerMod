@@ -16,8 +16,8 @@ public class SignalController extends BlockContainer {
 		super(Material.rock);
         this.setCreativeTab(CreativeTabSignalController.tabUtils);
 		//modidないとテクスチャおかしくなる
-        this.setBlockName(SignalControllerCore.MODID + ":" + "ATSController");
-        this.setBlockTextureName(SignalControllerCore.MODID + ":" + "ATSController");
+        this.setBlockName(SignalControllerCore.MODID + ":" + "SignalController");
+        this.setBlockTextureName(SignalControllerCore.MODID + ":" + "SignalController");
 		this.setStepSound(Block.soundTypeStone);
 	}
 

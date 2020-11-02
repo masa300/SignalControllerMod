@@ -6,7 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 public class CreativeTabSignalController extends CreativeTabs {
-    public static final CreativeTabs tabUtils = new CreativeTabSignalController("ATSController");
+    public static final CreativeTabs tabUtils = new CreativeTabSignalController("SignalController");
 
     private CreativeTabSignalController(String label) {
 		super(label);
@@ -21,6 +21,6 @@ public class CreativeTabSignalController extends CreativeTabs {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getTranslatedTabLabel() {
-		return "ATSController";
+		return "SignalController";
 	}
 }

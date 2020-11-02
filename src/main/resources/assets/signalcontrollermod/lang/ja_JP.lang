@@ -1,10 +1,10 @@
 #hogehoge hugahuga
-ATSControllerMod.gui.signalType.none=設定なし
-ATSControllerMod.gui.signalType.signal2a=2灯式A
-ATSControllerMod.gui.signalType.signal2b=2灯式B
-ATSControllerMod.gui.signalType.signal3=3灯式
-ATSControllerMod.gui.signalType.signal4a=4灯式A
-ATSControllerMod.gui.signalType.signal4b=4灯式B
-ATSControllerMod.gui.signalType.signal5a=5灯式A
-ATSControllerMod.gui.signalType.signal5b=5灯式B
-ATSControllerMod.gui.signalType.signal6=6灯式
+SignalControllerMod.gui.signalType.none=設定なし
+SignalControllerMod.gui.signalType.signal2a=2灯式A
+SignalControllerMod.gui.signalType.signal2b=2灯式B
+SignalControllerMod.gui.signalType.signal3=3灯式
+SignalControllerMod.gui.signalType.signal4a=4灯式A
+SignalControllerMod.gui.signalType.signal4b=4灯式B
+SignalControllerMod.gui.signalType.signal5a=5灯式A
+SignalControllerMod.gui.signalType.signal5b=5灯式B
+SignalControllerMod.gui.signalType.signal6=6灯式
