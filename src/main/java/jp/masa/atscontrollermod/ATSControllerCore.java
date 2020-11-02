@@ -14,26 +14,26 @@ import jp.masa.atscontrollermod.network.PacketATSController;
 
 @Mod(modid = ATSControllerCore.MODID, version = ATSControllerCore.VERSION, name = ATSControllerCore.MODID)
 public class ATSControllerCore {
-    public static final String MODID = "ATSControllerMod";
-    public static final String VERSION = "1.0.0";
+	public static final String MODID = "ATSControllerMod";
+	public static final String VERSION = "1.0.0";
 
-    @Mod.Instance(MODID)
-    public static ATSControllerCore INSTANCE;
+	@Mod.Instance(MODID)
+	public static ATSControllerCore INSTANCE;
 
-    public static final int guiId_ATSController = 0;
+	public static final int guiId_ATSController = 0;
 
-    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new ATSControllerGUIHandler());
-        NETWORK_WRAPPER.registerMessage(PacketATSController.class, PacketATSController.class, 0, Side.SERVER);
-        GameRegistry.registerTileEntity(TileEntityATSController.class, "TE_ATSController");
-    }
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new ATSControllerGUIHandler());
+		NETWORK_WRAPPER.registerMessage(PacketATSController.class, PacketATSController.class, 0, Side.SERVER);
+		GameRegistry.registerTileEntity(TileEntityATSController.class, "TE_ATSController");
+	}
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        // Block登録
-        new ATSControllerBlock().preInit();
-    }
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		// Block登録
+		new ATSControllerBlock().preInit();
+	}
 }
