@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class PacketATSController extends PacketTileEntity implements IMessageHandler<PacketATSController, IMessage> {
     private SignalType signalType;
     private int[][] nextSignal;
-    private int[] displayPos;
+    private  int[] displayPos;
     private boolean above;
 
     public PacketATSController() {

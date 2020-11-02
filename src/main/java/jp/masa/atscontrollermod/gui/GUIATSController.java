@@ -33,15 +33,15 @@ public class GUIATSController extends GuiScreenCustom {
         //縦はthis.height
         //this.fontRendererObj.drawString("ここに文字", 横座標, 縦座標, 白なら0xffffff);
 
-        this.fontRendererObj.drawString("ATSController", this.width / 4, 20, 0xffffff);
-        this.fontRendererObj.drawString("signalType", this.width / 2 - 120, this.height / 2 - 50, 0xffffff);
+        this.fontRendererObj.drawString("ATSController",  this.width / 4, 20, 0xffffff);
+        this.fontRendererObj.drawString("signalType",  this.width / 2 - 120, this.height / 2 - 50, 0xffffff);
         this.fontRendererObj.drawString("x", this.width / 2 - 37, this.height / 2 - 25, 0xffffff);
         this.fontRendererObj.drawString("y", this.width / 2 - 2, this.height / 2 - 25, 0xffffff);
         this.fontRendererObj.drawString("z", this.width / 2 + 33, this.height / 2 - 25, 0xffffff);
 
-        this.fontRendererObj.drawString("nextSignal", this.width / 2 - 120, this.height / 2 - 5, 0xffffff);
-        this.fontRendererObj.drawString("displayPos", this.width / 2 - 120, this.height / 2 + 20, 0xffffff);
-        this.fontRendererObj.drawString("above", this.width / 2 - 120, this.height / 2 + 45, 0xffffff);
+        this.fontRendererObj.drawString("nextSignal",  this.width / 2 - 120, this.height / 2 - 5, 0xffffff);
+        this.fontRendererObj.drawString("displayPos",  this.width / 2 - 120, this.height / 2 + 20, 0xffffff);
+        this.fontRendererObj.drawString("above",  this.width / 2 - 120, this.height / 2 + 45, 0xffffff);
 
         for (Object o : this.buttonList) {
             GuiButton button = (GuiButton) o;
@@ -65,7 +65,6 @@ public class GUIATSController extends GuiScreenCustom {
         this.addGuiTextField(String.valueOf(this.tile.getDisplayPos()[2]), this.width / 2 + 20, this.height / 2 + 15, Byte.MAX_VALUE, 30);
         this.buttonList.add(new GuiButton(1, this.width / 2 - 40, this.height / 2 - 55, 80, 20, ""));
 //        this.buttonList.add(new GuiButton(2, this.width / 2 + 60, this.height / 2 - 10, 20, 20, "..."));
-        System.out.println("gui:" + tile.isAbove());
         this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, this.height / 2 + 45, "", tile.isAbove()));
         this.buttonList.add(new GuiButton(21, this.width / 2 - 110, this.height - 30, 100, 20, "決定"));
         this.buttonList.add(new GuiButton(20, this.width / 2 + 10, this.height - 30, 100, 20, "キャンセル"));
@@ -81,27 +80,21 @@ public class GUIATSController extends GuiScreenCustom {
     // button押したときのevent
     @Override
     protected void actionPerformed(GuiButton button) {
-//        super.actionPerformed(button);
         if (button.id == 20) {  //キャンセル
             this.mc.displayGuiScreen(null);
-            return;
-
-        } else if (button.id == 21) {    //決定
+        } else if(button.id == 21) {    //決定
             this.mc.displayGuiScreen(null);
             this.sendPacket();
-            return;
-
-        } else if (button.id == 1) { //signalTypeボタン
+        } else if(button.id == 1) { //signalTypeボタン
             this.signalType = (SignalType) this.getNextEnum(this.signalType);
-            return;
         }
     }
 
     private void sendPacket() {
-        int[][] nextSignal = new int[][]{
-                {this.getIntGuiTextFieldText(0), this.getIntGuiTextFieldText(1), this.getIntGuiTextFieldText(2)}
+        int[][] nextSignal = new int[][] {
+                {this.getIntGuiTextFieldText(0), this.getIntGuiTextFieldText(1),this.getIntGuiTextFieldText(2)}
         };
-        int[] displayPos = new int[]{
+        int[] displayPos = new int[] {
                 this.getIntGuiTextFieldText(3), this.getIntGuiTextFieldText(4), this.getIntGuiTextFieldText(5)
         };
         boolean above = ((GuiCheckBox) this.buttonList.get(1)).isChecked();

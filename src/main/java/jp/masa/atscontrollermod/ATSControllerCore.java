@@ -35,7 +35,5 @@ public class ATSControllerCore {
     public void preInit(FMLPreInitializationEvent event) {
         // Block登録
         new ATSControllerBlock().preInit();
-
-//        proxy.preInit();
     }
 }

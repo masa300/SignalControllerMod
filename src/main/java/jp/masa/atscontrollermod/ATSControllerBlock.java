@@ -8,7 +8,6 @@ public class ATSControllerBlock {
     public static Block blockATSController;
 
     public void preInit() {
-        blockATSController = new ATSController();
-        GameRegistry.registerBlock(blockATSController, "ATSController");
+        GameRegistry.registerBlock(blockATSController = new ATSController(), "ATSController");
     }
 }
