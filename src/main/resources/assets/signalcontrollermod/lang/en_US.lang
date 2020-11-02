@@ -1,10 +1,11 @@
 #hogehoge hugahuga
-ATSControllerMod.gui.signalType.none=none
-ATSControllerMod.gui.signalType.signal2a=2 Signals A
-ATSControllerMod.gui.signalType.signal2b=2 Signals B
-ATSControllerMod.gui.signalType.signal3=3 Signals
-ATSControllerMod.gui.signalType.signal4a=4 Signals A
-ATSControllerMod.gui.signalType.signal4b=4 Signals B
-ATSControllerMod.gui.signalType.signal5a=5 Signals A
-ATSControllerMod.gui.signalType.signal5b=5 Signals B
-ATSControllerMod.gui.signalType.signal6=6 Signals
+tile.SignalControllerMod:SignalController.name=SignalControllerBlock
+SignalControllerMod.gui.signalType.none=none
+SignalControllerMod.gui.signalType.signal2a=2 Signals A
+SignalControllerMod.gui.signalType.signal2b=2 Signals B
+SignalControllerMod.gui.signalType.signal3=3 Signals
+SignalControllerMod.gui.signalType.signal4a=4 Signals A
+SignalControllerMod.gui.signalType.signal4b=4 Signals B
+SignalControllerMod.gui.signalType.signal5a=5 Signals A
+SignalControllerMod.gui.signalType.signal5b=5 Signals B
+SignalControllerMod.gui.signalType.signal6=6 Signals

@@ -33,7 +33,7 @@ public class GUISignalController extends GuiScreenCustom {
 		//縦はthis.height
 		//this.fontRendererObj.drawString("ここに文字", 横座標, 縦座標, 白なら0xffffff);
 
-		this.fontRendererObj.drawString("ATSController", this.width / 4, 20, 0xffffff);
+		this.fontRendererObj.drawString("SignalController", this.width / 4, 20, 0xffffff);
 		this.fontRendererObj.drawString("signalType", this.width / 2 - 120, this.height / 2 - 50, 0xffffff);
 		this.fontRendererObj.drawString("x", this.width / 2 - 37, this.height / 2 - 25, 0xffffff);
 		this.fontRendererObj.drawString("y", this.width / 2 - 2, this.height / 2 - 25, 0xffffff);
@@ -46,7 +46,7 @@ public class GUISignalController extends GuiScreenCustom {
 		for (Object o : this.buttonList) {
 			GuiButton button = (GuiButton) o;
 			if (button.id == 1) {
-				button.displayString = I18n.format("ATSControllerMod.gui.signalType." + this.signalType.toString());
+				button.displayString = I18n.format("SignalControllerMod.gui.signalType." + this.signalType.toString());
 			}
 		}
 	}
