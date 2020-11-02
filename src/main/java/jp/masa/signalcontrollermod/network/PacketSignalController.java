@@ -1,27 +1,27 @@
-package jp.masa.atscontrollermod.network;
+package jp.masa.signalcontrollermod.network;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import jp.masa.atscontrollermod.block.tileentity.TileEntityATSController;
-import jp.masa.atscontrollermod.gui.atscontroller.SignalType;
+import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
+import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
 import jp.ngt.ngtlib.util.NGTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class PacketATSController extends PacketTileEntity implements IMessageHandler<PacketATSController, IMessage> {
+public class PacketSignalController extends PacketTileEntity implements IMessageHandler<PacketSignalController, IMessage> {
 	private SignalType signalType;
 	private int[][] nextSignal;
 	private int[] displayPos;
 	private boolean above;
 
-	public PacketATSController() {
+    public PacketSignalController() {
 
 	}
 
-	public PacketATSController(TileEntity tileEntity, SignalType signalType, int[][] nextSignal, int[] displayPos, boolean above) {
+    public PacketSignalController(TileEntity tileEntity, SignalType signalType, int[][] nextSignal, int[] displayPos, boolean above) {
 		super(tileEntity);
 		this.signalType = signalType;
 		this.nextSignal = nextSignal;
@@ -61,9 +61,9 @@ public class PacketATSController extends PacketTileEntity implements IMessageHan
 
 	//ここ鯖
 	@Override
-	public IMessage onMessage(PacketATSController message, MessageContext ctx) {
+    public IMessage onMessage(PacketSignalController message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
-		TileEntityATSController tile = (TileEntityATSController) message.getTileEntity(world);
+        TileEntitySignalController tile = (TileEntitySignalController) message.getTileEntity(world);
 		tile.setSignalType(message.signalType);
 		tile.setNextSignal(message.nextSignal);
 		tile.setDisplayPos(message.displayPos);

@@ -1,21 +1,21 @@
-package jp.masa.atscontrollermod;
+package jp.masa.signalcontrollermod;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class CreativeTabATSController extends CreativeTabs {
-	public static final CreativeTabs tabUtils = new CreativeTabATSController("ATSController");
+public class CreativeTabSignalController extends CreativeTabs {
+    public static final CreativeTabs tabUtils = new CreativeTabSignalController("ATSController");
 
-	private CreativeTabATSController(String label) {
+    private CreativeTabSignalController(String label) {
 		super(label);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem() {
-		return Item.getItemFromBlock(ATSControllerBlock.blockATSController);
+        return Item.getItemFromBlock(SignalControllerBlock.blockATSController);
 	}
 
 	@Override
