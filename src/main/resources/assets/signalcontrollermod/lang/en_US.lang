@@ -1,4 +1,5 @@
 #hogehoge hugahuga
+tile.SignalControllerMod:SignalControllerMod.name=SignalControllerBlock
 SignalControllerMod.gui.signalType.none=none
 SignalControllerMod.gui.signalType.signal2a=2 Signals A
 SignalControllerMod.gui.signalType.signal2b=2 Signals B

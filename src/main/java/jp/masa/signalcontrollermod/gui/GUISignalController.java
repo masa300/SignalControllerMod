@@ -46,7 +46,7 @@ public class GUISignalController extends GuiScreenCustom {
 		for (Object o : this.buttonList) {
 			GuiButton button = (GuiButton) o;
 			if (button.id == 1) {
-				button.displayString = I18n.format("SignalController.gui.signalType." + this.signalType.toString());
+				button.displayString = I18n.format("SignalControllerMod.gui.signalType." + this.signalType.toString());
 			}
 		}
 	}
