@@ -1,11 +1,11 @@
-package jp.masa.atscontrollermod.gui;
+package jp.masa.signalcontrollermod.gui;
 
 import cpw.mods.fml.client.config.GuiCheckBox;
-import jp.masa.atscontrollermod.ATSControllerCore;
-import jp.masa.atscontrollermod.block.tileentity.TileEntityATSController;
-import jp.masa.atscontrollermod.gui.atscontroller.SignalType;
-import jp.masa.atscontrollermod.gui.parts.GuiScreenCustom;
-import jp.masa.atscontrollermod.network.PacketATSController;
+import jp.masa.signalcontrollermod.SignalControllerCore;
+import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
+import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
+import jp.masa.signalcontrollermod.gui.parts.GuiScreenCustom;
+import jp.masa.signalcontrollermod.network.PacketSignalController;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -13,12 +13,12 @@ import org.apache.commons.lang3.EnumUtils;
 
 import java.util.List;
 
-public class GUIATSController extends GuiScreenCustom {
+public class GUISignalController extends GuiScreenCustom {
 
-	private final TileEntityATSController tile;
+    private final TileEntitySignalController tile;
 	private SignalType signalType;
 
-	public GUIATSController(TileEntityATSController tile) {
+    public GUISignalController(TileEntitySignalController tile) {
 		this.tile = tile;
 		this.signalType = tile.getSignalType();
 	}
@@ -98,7 +98,7 @@ public class GUIATSController extends GuiScreenCustom {
 				this.getIntGuiTextFieldText(3), this.getIntGuiTextFieldText(4), this.getIntGuiTextFieldText(5)
 		};
 		boolean above = ((GuiCheckBox) this.buttonList.get(1)).isChecked();
-		ATSControllerCore.NETWORK_WRAPPER.sendToServer(new PacketATSController(this.tile, this.signalType, nextSignal, displayPos, above));
+        SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(this.tile, this.signalType, nextSignal, displayPos, above));
 	}
 
 	private int getIntGuiTextFieldText(int number) {

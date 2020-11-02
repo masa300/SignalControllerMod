@@ -1,4 +1,4 @@
-package jp.masa.atscontrollermod.block.tileentity;
+package jp.masa.signalcontrollermod.block.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;

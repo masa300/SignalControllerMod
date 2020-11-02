@@ -1,4 +1,4 @@
-package jp.masa.atscontrollermod.gui.parts;
+package jp.masa.signalcontrollermod.gui.parts;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;

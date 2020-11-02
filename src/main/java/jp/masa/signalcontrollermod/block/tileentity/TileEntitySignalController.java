@@ -1,6 +1,6 @@
-package jp.masa.atscontrollermod.block.tileentity;
+package jp.masa.signalcontrollermod.block.tileentity;
 
-import jp.masa.atscontrollermod.gui.atscontroller.SignalType;
+import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
 import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,13 +10,13 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityATSController extends TileEntityCustom {
+public class TileEntitySignalController extends TileEntityCustom {
 	private SignalType signalType;
 	private int[][] nextSignal;
 	private int[] displayPos;
 	private boolean above;
 
-	public TileEntityATSController() {
+    public TileEntitySignalController() {
 		this.signalType = SignalType.none;
 		this.nextSignal = new int[][]{{0, 0, 0}};
 		this.displayPos = new int[]{0, 0, 0};

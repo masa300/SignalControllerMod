@@ -1,4 +1,4 @@
-package jp.masa.atscontrollermod.network;
+package jp.masa.signalcontrollermod.network;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;

@@ -1,4 +1,4 @@
-package jp.masa.atscontrollermod.gui.atscontroller;
+package jp.masa.signalcontrollermod.gui.signalcontroller;
 
 public enum SignalType {
 	none {
