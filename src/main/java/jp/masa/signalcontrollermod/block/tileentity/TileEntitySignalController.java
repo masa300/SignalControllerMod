@@ -17,7 +17,7 @@ public class TileEntitySignalController extends TileEntityCustom {
     private boolean above;
 
     public TileEntitySignalController() {
-        this.signalType = SignalType.none;
+        this.signalType = SignalType.signal3;
         this.nextSignal = new int[][]{{0, 0, 0}};
         this.displayPos = new int[]{0, 0, 0};
         this.above = true;
@@ -53,7 +53,9 @@ public class TileEntitySignalController extends TileEntityCustom {
                 if (this.above) {
                     currentSignal = getSignalAbove(world);
                     if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
-                } else {
+                }
+
+                if (!(this.displayPos[0] == 0 && this.displayPos[1] == 0 && this.displayPos[2] == 0)) {
                     currentSignal = getSignal(world, displayPos[0], displayPos[1], displayPos[2]);
                     if (currentSignal != null && (int) currentSignal != signalLevel)
                         setSignal(world, displayPos[0], displayPos[1], displayPos[2], signalLevel);
@@ -117,7 +119,7 @@ public class TileEntitySignalController extends TileEntityCustom {
     }
 
     public SignalType getSignalType() {
-        return (this.signalType == null) ? this.signalType = SignalType.none : this.signalType;
+        return (this.signalType == null) ? this.signalType = SignalType.signal3 : this.signalType;
     }
 
     public void setSignalType(SignalType signalType) {
