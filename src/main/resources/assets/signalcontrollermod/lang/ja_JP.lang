@@ -8,3 +8,6 @@ SignalControllerMod.gui.signalType.signal4b=4灯式B
 SignalControllerMod.gui.signalType.signal5a=5灯式A
 SignalControllerMod.gui.signalType.signal5b=5灯式B
 SignalControllerMod.gui.signalType.signal6=6灯式
+
+item.SignalControllerMod:ItemPosSettingTool.0.name=座標設定ツール(NextSignal)
+item.SignalControllerMod:ItemPosSettingTool.1.name=座標設定ツール(DisplayPos)

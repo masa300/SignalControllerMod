@@ -9,3 +9,6 @@ SignalControllerMod.gui.signalType.signal4b=4 Signals B
 SignalControllerMod.gui.signalType.signal5a=5 Signals A
 SignalControllerMod.gui.signalType.signal5b=5 Signals B
 SignalControllerMod.gui.signalType.signal6=6 Signals
+
+item.SignalControllerMod:ItemPosSettingTool.0.name=Pos Setting Tool(NextSignal)
+item.SignalControllerMod:ItemPosSettingTool.1.name=Pos Setting Tool(DisplayPos)
