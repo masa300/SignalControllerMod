@@ -5,9 +5,9 @@ import jp.masa.signalcontrollermod.block.SignalController;
 import net.minecraft.block.Block;
 
 public class SignalControllerBlock {
-	public static Block blockATSController;
+    public static Block blockATSController;
 
-	public void preInit() {
+    public void preInit() {
         GameRegistry.registerBlock(blockATSController = new SignalController(), "ATSController");
-	}
+    }
 }

@@ -15,25 +15,26 @@ import jp.masa.signalcontrollermod.network.PacketSignalController;
 @Mod(modid = SignalControllerCore.MODID, version = SignalControllerCore.VERSION, name = SignalControllerCore.MODID)
 public class SignalControllerCore {
     public static final String MODID = "SignalControllerMod";
-	public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.0";
 
-	@Mod.Instance(MODID)
+    @Mod.Instance(MODID)
     public static SignalControllerCore INSTANCE;
 
-	public static final int guiId_ATSController = 0;
+    public static final int guiId_ATSController = 0;
 
-	public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new SignalControllerGUIHandler());
         NETWORK_WRAPPER.registerMessage(PacketSignalController.class, PacketSignalController.class, 0, Side.SERVER);
         GameRegistry.registerTileEntity(TileEntitySignalController.class, "TE_SignalController");
-	}
+    }
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		// Block登録
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        // Block登録
         new SignalControllerBlock().preInit();
-	}
+        new SignalControllerItem().preInit();
+    }
 }

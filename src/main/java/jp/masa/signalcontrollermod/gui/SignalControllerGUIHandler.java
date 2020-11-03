@@ -8,16 +8,16 @@ import net.minecraft.world.World;
 
 public class SignalControllerGUIHandler implements IGuiHandler {
 
-	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return null;
-	}
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return null;
+    }
 
-	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == SignalControllerCore.guiId_ATSController) {
             return new GUISignalController((TileEntitySignalController) player.worldObj.getTileEntity(x, y, z));
-		}
-		return null;
-	}
+        }
+        return null;
+    }
 }
