@@ -10,17 +10,26 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.EnumUtils;
+import org.lwjgl.input.Mouse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GUISignalController extends GuiScreenCustom {
-
     private final TileEntitySignalController tile;
     private SignalType signalType;
+    private List<int[]> nextSignalList;
+    private int[] displayPos;
+    private boolean above;
+    private int currentScroll;
 
     public GUISignalController(TileEntitySignalController tile) {
         this.tile = tile;
         this.signalType = tile.getSignalType();
+        this.nextSignalList = new ArrayList<>(Arrays.asList(tile.getNextSignal()));
+        this.displayPos = tile.getDisplayPos();
+        this.above = tile.isAbove();
     }
 
     // 毎tick呼び出される
@@ -34,14 +43,17 @@ public class GUISignalController extends GuiScreenCustom {
         //this.fontRendererObj.drawString("ここに文字", 横座標, 縦座標, 白なら0xffffff);
 
         this.fontRendererObj.drawString("SignalController", this.width / 4, 20, 0xffffff);
-        this.fontRendererObj.drawString("signalType", this.width / 2 - 120, this.height / 2 - 50, 0xffffff);
-        this.fontRendererObj.drawString("x", this.width / 2 - 37, this.height / 2 - 25, 0xffffff);
-        this.fontRendererObj.drawString("y", this.width / 2 - 2, this.height / 2 - 25, 0xffffff);
-        this.fontRendererObj.drawString("z", this.width / 2 + 33, this.height / 2 - 25, 0xffffff);
+        this.fontRendererObj.drawString("signalType", this.width / 2 - 120, this.height / 2 - 50 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("x", this.width / 2 - 37, this.height / 2 - 25 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("y", this.width / 2 - 2, this.height / 2 - 25 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("z", this.width / 2 + 33, this.height / 2 - 25 + this.currentScroll, 0xffffff);
 
-        this.fontRendererObj.drawString("nextSignal", this.width / 2 - 120, this.height / 2 - 5, 0xffffff);
-        this.fontRendererObj.drawString("displayPos", this.width / 2 - 120, this.height / 2 + 20, 0xffffff);
-        this.fontRendererObj.drawString("above", this.width / 2 - 120, this.height / 2 + 45, 0xffffff);
+        int nHeight = this.height / 2 - 30 + this.currentScroll;
+        for (int i = 0; i < this.nextSignalList.size(); i++) {
+            this.fontRendererObj.drawString("nextSignal" + i, this.width / 2 - 120, nHeight += 25, 0xffffff);
+        }
+        this.fontRendererObj.drawString("displayPos", this.width / 2 - 120, nHeight += 25, 0xffffff);
+        this.fontRendererObj.drawString("above", this.width / 2 - 120, nHeight += 25, 0xffffff);
 
         for (Object o : this.buttonList) {
             GuiButton button = (GuiButton) o;
@@ -57,17 +69,29 @@ public class GUISignalController extends GuiScreenCustom {
     @Override
     public void initGui() {
         super.initGui();
-        this.addGuiTextField(String.valueOf(this.tile.getNextSignal()[0][0]), this.width / 2 - 50, this.height / 2 - 10, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.tile.getNextSignal()[0][1]), this.width / 2 - 15, this.height / 2 - 10, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.tile.getNextSignal()[0][2]), this.width / 2 + 20, this.height / 2 - 10, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.tile.getDisplayPos()[0]), this.width / 2 - 50, this.height / 2 + 15, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.tile.getDisplayPos()[1]), this.width / 2 - 15, this.height / 2 + 15, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.tile.getDisplayPos()[2]), this.width / 2 + 20, this.height / 2 + 15, Byte.MAX_VALUE, 30);
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 40, this.height / 2 - 55, 80, 20, ""));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 40, this.height / 2 - 55 + this.currentScroll, 80, 20, ""));
 //        this.buttonList.add(new GuiButton(2, this.width / 2 + 60, this.height / 2 - 10, 20, 20, "..."));
-        this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, this.height / 2 + 45, "", tile.isAbove()));
         this.buttonList.add(new GuiButton(21, this.width / 2 - 110, this.height - 30, 100, 20, "決定"));
         this.buttonList.add(new GuiButton(20, this.width / 2 + 10, this.height - 30, 100, 20, "キャンセル"));
+
+        int nHeight = this.height / 2 - 10 + this.currentScroll;
+        List<int[]> signalList = this.nextSignalList;
+        for (int i = 0, signalListSize = signalList.size(); i < signalListSize; i++) {
+            int[] nextSignal = signalList.get(i);
+            this.addGuiTextField(String.valueOf(nextSignal[0]), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
+            this.addGuiTextField(String.valueOf(nextSignal[1]), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
+            this.addGuiTextField(String.valueOf(nextSignal[2]), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
+            this.buttonList.add(new GuiButton(5000 + i, this.width / 2 + 55, nHeight, 20, 20, "+"));
+            if (i != 0) {
+                this.buttonList.add(new GuiButton(6000 + i, this.width / 2 + 80, nHeight, 20, 20, "-"));
+            }
+            nHeight += 25;
+        }
+        this.addGuiTextField(String.valueOf(this.displayPos[0]), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
+        this.addGuiTextField(String.valueOf(this.displayPos[1]), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
+        this.addGuiTextField(String.valueOf(this.displayPos[2]), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
+        nHeight += 25;
+        this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, nHeight + 5, "", this.above));
     }
 
     // キーボード入力時のevent
@@ -83,28 +107,67 @@ public class GUISignalController extends GuiScreenCustom {
         if (button.id == 20) {  //キャンセル
             this.mc.displayGuiScreen(null);
         } else if (button.id == 21) {    //決定
-            this.mc.displayGuiScreen(null);
             this.sendPacket();
+            this.mc.displayGuiScreen(null);
         } else if (button.id == 1) { //signalTypeボタン
             this.signalType = (SignalType) this.getNextEnum(this.signalType);
+        } else if (button.id >= 6000) {
+            this.saveValue();
+            this.nextSignalList.remove(button.id - 6000);
+            this.initGui();
+        } else if (button.id >= 5000) {
+            this.saveValue();
+            this.nextSignalList.add(button.id - 5000 + 1, new int[3]);
+            this.initGui();
         }
     }
 
+    @Override
+    public void handleMouseInput() {
+        super.handleMouseInput();
+        int i0 = Mouse.getEventDWheel();
+        if (i0 != 0) {
+            i0 = (i0 > 0) ? 25 : -25;
+            this.scroll(i0);
+        }
+    }
+
+    private void scroll(int par1) {
+        this.currentScroll = Math.min(Math.max(this.currentScroll + par1, -this.width), 0);
+        this.saveValue();
+        this.initGui();
+    }
+
     private void sendPacket() {
-        int[][] nextSignal = new int[][]{
-                {this.getIntGuiTextFieldText(0), this.getIntGuiTextFieldText(1), this.getIntGuiTextFieldText(2)}
+        SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(
+                this.tile,
+                this.signalType,
+                this.nextSignalList.toArray(new int[this.nextSignalList.size()][]),
+                this.displayPos,
+                this.above));
+    }
+
+    private void saveValue() {
+        int size = this.nextSignalList.size();
+        for (int i = 0; i < size; i++) {
+            this.nextSignalList.set(i, new int[]{
+                    this.getIntGuiTextFieldText(3 * i),
+                    this.getIntGuiTextFieldText(3 * i + 1),
+                    this.getIntGuiTextFieldText(3 * i + 2)});
+        }
+        this.displayPos = new int[]{
+                this.getIntGuiTextFieldText(this.textFieldList.size() - 3),
+                this.getIntGuiTextFieldText(this.textFieldList.size() - 2),
+                this.getIntGuiTextFieldText(this.textFieldList.size() - 1)
         };
-        int[] displayPos = new int[]{
-                this.getIntGuiTextFieldText(3), this.getIntGuiTextFieldText(4), this.getIntGuiTextFieldText(5)
-        };
-        boolean above = ((GuiCheckBox) this.buttonList.get(1)).isChecked();
-        SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(this.tile, this.signalType, nextSignal, displayPos, above));
+        this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
+
     }
 
     private int getIntGuiTextFieldText(int number) {
         String str = this.textFieldList.get(number).getText();
         int i = 0;
-        if (str == null || str.equals("")) {
+        if (str == null || str.isEmpty()) {
             return i;
         }
 
