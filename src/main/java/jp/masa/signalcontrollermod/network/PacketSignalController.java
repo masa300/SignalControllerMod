@@ -32,9 +32,12 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
     @Override
     protected void write(ByteBuf buffer) {
         ByteBufUtils.writeUTF8String(buffer, signalType.toString());
-        buffer.writeInt(this.nextSignal[0][0]);
-        buffer.writeInt(this.nextSignal[0][1]);
-        buffer.writeInt(this.nextSignal[0][2]);
+        buffer.writeInt(this.nextSignal.length);
+        for (int[] pos : this.nextSignal) {
+            buffer.writeInt(pos[0]);
+            buffer.writeInt(pos[1]);
+            buffer.writeInt(pos[2]);
+        }
         buffer.writeInt(this.displayPos[0]);
         buffer.writeInt(this.displayPos[1]);
         buffer.writeInt(this.displayPos[2]);
@@ -45,11 +48,13 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
     @Override
     protected void read(ByteBuf buffer) {
         this.signalType = SignalType.getType(ByteBufUtils.readUTF8String(buffer));
-        this.nextSignal = new int[1][3];
-        this.nextSignal[0][0] = buffer.readInt();
-        this.nextSignal[0][1] = buffer.readInt();
-        this.nextSignal[0][2] = buffer.readInt();
-
+        int size = buffer.readInt();
+        this.nextSignal = new int[size][3];
+        for (int i = 0; i < size; i++) {
+            this.nextSignal[i][0] = buffer.readInt();
+            this.nextSignal[i][1] = buffer.readInt();
+            this.nextSignal[i][2] = buffer.readInt();
+        }
         this.displayPos = new int[3];
         this.displayPos[0] = buffer.readInt();
         this.displayPos[1] = buffer.readInt();
