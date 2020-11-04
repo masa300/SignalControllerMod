@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TileEntitySignalController extends TileEntityCustom {
@@ -30,8 +31,8 @@ public class TileEntitySignalController extends TileEntityCustom {
             int MAXSIGNALLEVEL = 6;
             List<Integer> nextSignalList = new ArrayList<>();
 
-            for (int i = 0; i < this.nextSignal.length; i++) {
-                Object nextSignal = this.getSignal(world, this.nextSignal[0][0], this.nextSignal[0][1], this.nextSignal[0][2]);
+            for (int[] pos : this.nextSignal) {
+                Object nextSignal = this.getSignal(world, pos[0], pos[1], pos[2]);
 
                 if (nextSignal instanceof Integer) {
                     nextSignalList.add((int) nextSignal);
@@ -95,14 +96,25 @@ public class TileEntitySignalController extends TileEntityCustom {
         for (int i = 1; i <= searchMaxCount; i++) {
             setSignal(world, this.xCoord, this.yCoord + i, this.zCoord, level);
         }
-
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.signalType = SignalType.getType(nbt.getString("signalType"));
-        this.nextSignal[0] = nbt.getIntArray("nextSignal0");
+        int size = nbt.getInteger("nextSignalSize");
+        if (size == 0) {
+            int[] nextSignal0 = nbt.getIntArray("nextSignal0");
+            if (nextSignal0 == null) {
+                nextSignal0 = new int[3];
+            }
+            this.nextSignal[0] = nextSignal0;
+        } else {
+            this.nextSignal = new int[size][];
+            for (int i = 0; i < size; i++) {
+                this.nextSignal[i] = nbt.getIntArray("nextSignal" + i);
+            }
+        }
         this.displayPos = nbt.getIntArray("displayPos");
         this.above = nbt.getBoolean("above");
     }
@@ -111,7 +123,11 @@ public class TileEntitySignalController extends TileEntityCustom {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setString("signalType", this.signalType.toString());
-        nbt.setIntArray("nextSignal0", this.nextSignal[0]);
+        int size = this.nextSignal.length;
+        nbt.setInteger("nextSignalSize", size);
+        for (int i = 0; i < size; i++) {
+            nbt.setIntArray("nextSignal" + i, this.nextSignal[i]);
+        }
         nbt.setIntArray("displayPos", this.displayPos);
         nbt.setBoolean("above", this.above);
     }
@@ -130,6 +146,22 @@ public class TileEntitySignalController extends TileEntityCustom {
 
     public void setNextSignal(int[][] nextSignal) {
         this.nextSignal = nextSignal;
+    }
+
+    public boolean addNextSignal(int[] nextSignalPos) {
+        List<int[]> nextSignalList = new ArrayList<>(Arrays.asList(this.nextSignal));
+        int[] pos000 = new int[]{0, 0, 0};
+        for (int[] pos : nextSignalList) {
+            if (Arrays.equals(pos, nextSignalPos)) {
+                return false;
+            } else if (Arrays.equals(pos, new int[]{0, 0, 0})) {
+                pos000 = pos;
+            }
+        }
+        nextSignalList.remove(pos000);
+        nextSignalList.add(nextSignalPos);
+        this.nextSignal = nextSignalList.toArray(new int[nextSignalList.size()][]);
+        return true;
     }
 
     public int[] getDisplayPos() {

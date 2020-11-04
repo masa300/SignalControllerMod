@@ -46,11 +46,15 @@ public class ItemPosSettingTool extends Item {
                     NBTTagCompound tag = itemStack.getTagCompound();
                     int[] pos = tag.getIntArray("pos");
                     if (itemStack.getItemDamage() == 0) {
-                        ((TileEntitySignalController) tileEntity).setNextSignal(new int[][]{pos});
-                        NGTLog.sendChatMessage(player, String.format("NextSignal set to(%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(pos);
+                        if (added) {
+                            NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        }else{
+                            NGTLog.sendChatMessage(player,"NextSignal already added");
+                        }
                     } else if (itemStack.getItemDamage() == 1) {
                         ((TileEntitySignalController) tileEntity).setDisplayPos(pos);
-                        NGTLog.sendChatMessage(player, String.format("DisplayPos set to(%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        NGTLog.sendChatMessage(player, String.format("DisplayPos set to (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
                     }
                     NGTUtil.sendPacketToClient(tileEntity);
                 }
