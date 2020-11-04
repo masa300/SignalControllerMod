@@ -75,10 +75,8 @@ public class ItemPosSettingTool extends Item {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         this.icons = new IIcon[2];
-        this.icons[0] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "");
-        //ToDo:テクスチャを設定してください
-        this.icons[1] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "");
-        //ToDo:テクスチャを設定してください
+        this.icons[0] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "Pos_Setting_Tool0");
+        this.icons[1] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "Pos_Setting_Tool1");
     }
 
     @Override

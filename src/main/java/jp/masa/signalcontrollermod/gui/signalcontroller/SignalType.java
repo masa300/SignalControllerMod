@@ -1,11 +1,6 @@
 package jp.masa.signalcontrollermod.gui.signalcontroller;
 
 public enum SignalType {
-    none {
-        public int upSignalLevel(int signalLevel) {
-            return (++signalLevel >= 6) ? 6 : signalLevel;
-        }
-    },
     signal2a {
         public int upSignalLevel(int signalLevel) {
             return (++signalLevel >= 2) ? 3 : signalLevel;
@@ -55,7 +50,7 @@ public enum SignalType {
                 return type;
             }
         }
-        return SignalType.none;
+        return SignalType.signal2a;
     }
 }
 
