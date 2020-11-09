@@ -144,7 +144,8 @@ public class GUISignalController extends GuiScreenCustom {
                 this.signalType,
                 this.nextSignalList.toArray(new int[this.nextSignalList.size()][]),
                 this.displayPos,
-                this.above));
+                ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked()
+        ));
     }
 
     private void saveValue() {

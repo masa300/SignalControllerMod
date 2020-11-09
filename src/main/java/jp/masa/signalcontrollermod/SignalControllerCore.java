@@ -15,7 +15,7 @@ import jp.masa.signalcontrollermod.network.PacketSignalController;
 @Mod(modid = SignalControllerCore.MODID, version = SignalControllerCore.VERSION, name = SignalControllerCore.MODID)
 public class SignalControllerCore {
     public static final String MODID = "SignalControllerMod";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.1.1";
 
     @Mod.Instance(MODID)
     public static SignalControllerCore INSTANCE;
