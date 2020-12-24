@@ -1,4 +1,9 @@
 # Signal Controller Mod
+  [![MCVer](https://img.shields.io/badge/Minecraft-1.7.10-brightgreen)](https://www.minecraft.net/)
+  [![ForgeVer](https://img.shields.io/badge/Forge-10.13.4.1558-important)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.7.10.html)
+  [![RTMVer](https://img.shields.io/badge/RealTrainMod-1.7.10.41-informational)](https://www.curseforge.com/minecraft/mc-mods/realtrainmod/files/3039063)  
+  [![DLCount](https://img.shields.io/github/downloads/masa300/SignalControllerMod/total)](https://github.com/masa300/SignalControllerMod/releases)
+  [![DLCountLatest](https://img.shields.io/github/downloads/masa300/SignalControllerMod/latest/total)](https://github.com/masa300/SignalControllerMod/releases/latest)  
   RealTrainModで閉塞信号システムを簡単に組むことができるMODです。  
   GUIで信号機の設定、専用アイテムで信号機の登録を簡単に行うことができます。  
   レッドストーン入力で信号機を停止現示に切り替えることができ、現示レベルは自動的にリンクします。  
@@ -9,14 +14,6 @@
   レシピを登録していないため、サバイバルでは入手できません。  
   Minecraft ForgeやRealTrainModの導入方法はここでは説明しません。ご自身でお調べください。  
   
-# 対応バージョン
-  Minecraft 1.7.10
-
-# 前提MOD
-  Minecraft Forge 1.7.10  
-  NGTLib 1.7.10.30以降  
-  RealTrainMod 1.7.10.37以降  
-
 # 導入方法
   1. Minecraft FrogeとRealTrainModを導入
   1. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)から当MODをダウンロードする
