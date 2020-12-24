@@ -16,7 +16,7 @@
   
 # 導入方法
   1. Minecraft FrogeとRealTrainModを導入
-  1. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)から当MODをダウンロードする
+  1. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)からSignalControllerMod-vX.X.X.jarをダウンロードする
   1. ダウンロードしたMOD(jarファイル)をmodsフォルダーに入れる
   1. MODの導入が成功すると、クリエイティブタブにSignalControllerのタブが追加されます。
 
