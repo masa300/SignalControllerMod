@@ -5,29 +5,33 @@
 
 
 # 注意事項
-  **当MODの導入によって生じた損害について、私は一切責任を負いません。**
-  レシピを登録していないため、サバイバルでは入手できません。
+  **当MODの導入によって生じた損害について、私は一切責任を負いません。**  
+  レシピを登録していないため、サバイバルでは入手できません。  
+  Minecraft ForgeやRealTrainModの導入方法はここでは説明しません。各自でお調べください。  
   
 # 対応バージョン
   Minecraft 1.7.10
 
 # 前提MOD
   Minecraft Forge 1.7.10  
-  RealTrainMod 1.7.10.37以降
+  NGTLib 1.7.10.30以降  
+  RealTrainMod 1.7.10.37以降  
 
 # 導入方法
-  MOD本体(jarファイル)をmodsフォルダーに入れる
-  MODが導入されると、クリエイティブタブにSignalControllerのタブが追加されます。
+  1. Minecraft FrogeとRealTrainModを導入
+  2. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)から当MODをダウンロードする
+  3. ダウンロードしたMOD(jarファイル)をmodsフォルダーに入れる
+  4. MODの導入が成功すると、クリエイティブタブにSignalControllerのタブが追加されます。
 
 # 追加ブロック、アイテムの説明
-- ### SignalControllerBlock
-  信号機を制御するブロックです。  
-  ブロックを右クリックで設定画面が開きます。設定画面については次で詳しく説明します。  
-  このブロックはチャンクローダーを一緒に設置する必要があります。設置していない場合正しく現示されない可能性があります。  
-  ↓以下のチャンクローダーは比較的軽く、大量に設置してもそこまで重くならないのでおすすめです。※PCスペックによって重くなる可能性があります。  
-  http://www.9minecraft.net/dimensional-anchors-mod/  
+- ## SignalControllerBlock
+    信号機を制御するブロックです。  
+    ブロックを右クリックで設定画面が開きます。
+    このブロックはチャンクローダーを一緒に設置する必要があります。設置していない場合正しく現示されない可能性があります。  
+    ↓以下のチャンクローダーは比較的軽く、大量に設置してもそこまで重くならないのでおすすめです。※PCスペックによる  
+    http://www.9minecraft.net/dimensional-anchors-mod/  
 
-- ### 設定画面の説明
+  ### 設定画面の説明
   - #### signalType
     制御する信号機のタイプを登録します。  
     信号タイプは正しく登録してください。  
@@ -45,11 +49,11 @@
   - #### above
     制御する信号機が真上にある場合はチェック[x]を付けるだけでリンクさせることができます。
 
-- ### 座標設定ツール
+- ## 座標設定ツール
   1. 座標設定ツールを持った状態で、RTMの信号機をShift＋右クリックすると、座標がアイテムに保存されます。
   2. SignalControllerBlockをShift＋右クリックすると、1. で保存した座標をブロックに登録します。
 
-  座標設定ツールにはNextSignal用(青)とDisplayPos(赤)の2種類があります。
+    座標設定ツールにはNextSignal用(青)とDisplayPos(赤)の2種類があります。
 
 # 協力
   当MODは、[hi03](https://twitter.com/hi03_s)様考案のATSControllerの仕組みをベースに制作させて頂きました。  
