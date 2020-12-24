@@ -19,9 +19,9 @@
 
 # 導入方法
   1. Minecraft FrogeとRealTrainModを導入
-  2. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)から当MODをダウンロードする
-  3. ダウンロードしたMOD(jarファイル)をmodsフォルダーに入れる
-  4. MODの導入が成功すると、クリエイティブタブにSignalControllerのタブが追加されます。
+  1. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)から当MODをダウンロードする
+  1. ダウンロードしたMOD(jarファイル)をmodsフォルダーに入れる
+  1. MODの導入が成功すると、クリエイティブタブにSignalControllerのタブが追加されます。
 
 # 追加ブロック、アイテムの説明
 - ## SignalControllerBlock
@@ -50,10 +50,11 @@
     制御する信号機が真上にある場合はチェック[x]を付けるだけでリンクさせることができます。
 
 - ## 座標設定ツール
-1. 座標設定ツールを持った状態で、RTMの信号機をShift＋右クリックすると、座標がアイテムに保存されます。
-2. SignalControllerBlockをShift＋右クリックすると、1. で保存した座標をブロックに登録します。
-
-    座標設定ツールにはNextSignal用(青)とDisplayPos(赤)の2種類があります。
+  座標設定ツールにはNextSignal用(青)とDisplayPos(赤)の2種類があります。
+  
+  ### 信号機の登録
+    ① 座標設定ツールを持った状態で、RTMの信号機をShift＋右クリックすると、座標がアイテムに保存されます。  
+    ② SignalControllerBlockをShift＋右クリックすると、①で保存した座標をブロックに登録します。  
 
 # 協力
   当MODは、[hi03](https://twitter.com/hi03_s)様考案のATSControllerの仕組みをベースに制作させて頂きました。  
