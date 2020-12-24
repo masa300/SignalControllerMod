@@ -139,6 +139,7 @@ public class GUISignalController extends GuiScreenCustom {
     }
 
     private void sendPacket() {
+        this.saveValue();
         SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(
                 this.tile,
                 this.signalType,
