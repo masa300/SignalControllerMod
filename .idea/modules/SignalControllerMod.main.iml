@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <autoDetectTypes>
+          <platformType>MCP</platformType>
+        </autoDetectTypes>
+      </configuration>
+    </facet>
+  </component>
+  <component name="McpModuleSettings">
+    <option name="mappingFile" value="C:\Users\Masa\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1558-1.7.10\srgs\mcp-srg.srg" />
+    <option name="mcpVersion" value="null_-1" />
+    <option name="minecraftVersion" value="1.7.10" />
+    <option name="srgType" value="SRG" />
+  </component>
+</module>
