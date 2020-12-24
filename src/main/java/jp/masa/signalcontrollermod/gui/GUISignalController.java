@@ -139,12 +139,13 @@ public class GUISignalController extends GuiScreenCustom {
     }
 
     private void sendPacket() {
+        this.saveValue();
         SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(
                 this.tile,
                 this.signalType,
                 this.nextSignalList.toArray(new int[this.nextSignalList.size()][]),
                 this.displayPos,
-                ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked()
+                this.above
         ));
     }
 
@@ -162,7 +163,6 @@ public class GUISignalController extends GuiScreenCustom {
                 this.getIntGuiTextFieldText(this.textFieldList.size() - 1)
         };
         this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
-
     }
 
     private int getIntGuiTextFieldText(int number) {
