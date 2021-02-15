@@ -57,8 +57,11 @@ public class TileEntitySignalController extends TileEntityCustom {
             if (isRSPowered) signalLevel = 1;
 
             if (this.above) {
-                currentSignal = getSignalAbove(world);
-                if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
+                int aboveY = this.searchSignalAboveY(world);
+                if(1 <= aboveY) {
+                    currentSignal = getSignal(world, this.xCoord, aboveY, this.zCoord);
+                    if (currentSignal != null && (int) currentSignal != signalLevel) setSignal(world, this.xCoord, aboveY, this.zCoord, signalLevel);
+                }
             }
 
             for (int[] pos : this.displayPos) {
@@ -86,25 +89,15 @@ public class TileEntitySignalController extends TileEntityCustom {
         }
     }
 
-    private Object getSignalAbove(World world) {
+    private int searchSignalAboveY(World world) {
         int searchMaxCount = 32;
 
-        if (world == null) return null;
         for (int i = 1; i <= searchMaxCount; i++) {
-            TileEntity tileEntity = world.getTileEntity(this.xCoord, this.yCoord + i, this.zCoord);
-            if (tileEntity instanceof TileEntitySignal)
-                return NGTUtil.getField(TileEntitySignal.class, tileEntity, "signalLevel");
+            int y = this.yCoord + i;
+            TileEntity tileEntity = world.getTileEntity(this.xCoord, y, this.zCoord);
+            if (tileEntity instanceof TileEntitySignal) return y;
         }
-        return null;
-    }
-
-    private void setSignalAbove(World world, int level) {
-        int searchMaxCount = 32;
-
-        if (world == null) return;
-        for (int i = 1; i <= searchMaxCount; i++) {
-            setSignal(world, this.xCoord, this.yCoord + i, this.zCoord, level);
-        }
+        return 0;
     }
 
     @Override
