@@ -53,8 +53,12 @@ public class ItemPosSettingTool extends Item {
                             NGTLog.sendChatMessage(player,"NextSignal already added");
                         }
                     } else if (itemStack.getItemDamage() == 1) {
-                        ((TileEntitySignalController) tileEntity).setDisplayPos(pos);
-                        NGTLog.sendChatMessage(player, String.format("DisplayPos set to (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(pos);
+                        if(added) {
+                            NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        } else {
+                            NGTLog.sendChatMessage(player,"DisplayPos already added");
+                        }
                     }
                     NGTUtil.sendPacketToClient(tileEntity);
                 }

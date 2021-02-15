@@ -20,16 +20,22 @@ public class GUISignalController extends GuiScreenCustom {
     private final TileEntitySignalController tile;
     private SignalType signalType;
     private List<int[]> nextSignalList;
-    private int[] displayPos;
+    private List<int[]> displayPosList;
     private boolean above;
+    private boolean last;
+    private boolean repeat;
+    private boolean reducedSpeed;
     private int currentScroll;
 
     public GUISignalController(TileEntitySignalController tile) {
         this.tile = tile;
         this.signalType = tile.getSignalType();
         this.nextSignalList = new ArrayList<>(Arrays.asList(tile.getNextSignal()));
-        this.displayPos = tile.getDisplayPos();
+        this.displayPosList = new ArrayList<>(Arrays.asList(tile.getDisplayPos()));
         this.above = tile.isAbove();
+        this.last = tile.isLast();
+        this.repeat = tile.isRepeat();
+        this.reducedSpeed = tile.isReducedSpeed();
     }
 
     // 毎tick呼び出される
@@ -42,8 +48,12 @@ public class GUISignalController extends GuiScreenCustom {
         //縦はthis.height
         //this.fontRendererObj.drawString("ここに文字", 横座標, 縦座標, 白なら0xffffff);
 
-        this.fontRendererObj.drawString("SignalController", this.width / 4, 20, 0xffffff);
-        this.fontRendererObj.drawString("signalType", this.width / 2 - 120, this.height / 2 - 50 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("SignalController", this.width / 2 - 200, 20, 0xffffff);
+        this.fontRendererObj.drawString("SignalType", this.width / 2 - 120, this.height / 2 - 75 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("Option", this.width / 2 - 120, this.height / 2 - 50 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("last", this.width / 2 - 35, this.height / 2 - 50 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("repeat", this.width / 2 + 15, this.height / 2 - 50 + this.currentScroll, 0xffffff);
+        this.fontRendererObj.drawString("Reduced Speed", this.width / 2 + 65, this.height / 2 - 50 + this.currentScroll, 0xffffff);
         this.fontRendererObj.drawString("x", this.width / 2 - 37, this.height / 2 - 25 + this.currentScroll, 0xffffff);
         this.fontRendererObj.drawString("y", this.width / 2 - 2, this.height / 2 - 25 + this.currentScroll, 0xffffff);
         this.fontRendererObj.drawString("z", this.width / 2 + 33, this.height / 2 - 25 + this.currentScroll, 0xffffff);
@@ -52,7 +62,9 @@ public class GUISignalController extends GuiScreenCustom {
         for (int i = 0; i < this.nextSignalList.size(); i++) {
             this.fontRendererObj.drawString("nextSignal" + i, this.width / 2 - 120, nHeight += 25, 0xffffff);
         }
-        this.fontRendererObj.drawString("displayPos", this.width / 2 - 120, nHeight += 25, 0xffffff);
+        for (int i = 0; i < this.displayPosList.size(); i++) {
+            this.fontRendererObj.drawString("displayPos" + i, this.width / 2 - 120, nHeight += 25, 0xffffff);
+        }
         this.fontRendererObj.drawString("above", this.width / 2 - 120, nHeight += 25, 0xffffff);
 
         for (Object o : this.buttonList) {
@@ -69,8 +81,10 @@ public class GUISignalController extends GuiScreenCustom {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 40, this.height / 2 - 55 + this.currentScroll, 80, 20, ""));
-//        this.buttonList.add(new GuiButton(2, this.width / 2 + 60, this.height / 2 - 10, 20, 20, "..."));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 40, this.height / 2 - 80 + this.currentScroll, 80, 20, ""));
+        this.buttonList.add(new GuiCheckBox(1001, this.width / 2 - 50, this.height / 2 - 51 + this.currentScroll, "", this.last));
+        this.buttonList.add(new GuiCheckBox(1002, this.width / 2, this.height / 2 - 51 + this.currentScroll, "", this.repeat));
+        this.buttonList.add(new GuiCheckBox(1003, this.width / 2 + 50, this.height / 2 - 51 + this.currentScroll, "", this.reducedSpeed));
         this.buttonList.add(new GuiButton(21, this.width / 2 - 110, this.height - 30, 100, 20, "決定"));
         this.buttonList.add(new GuiButton(20, this.width / 2 + 10, this.height - 30, 100, 20, "キャンセル"));
 
@@ -87,10 +101,19 @@ public class GUISignalController extends GuiScreenCustom {
             }
             nHeight += 25;
         }
-        this.addGuiTextField(String.valueOf(this.displayPos[0]), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.displayPos[1]), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
-        this.addGuiTextField(String.valueOf(this.displayPos[2]), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
-        nHeight += 25;
+        List<int[]> displayList = this.displayPosList;
+        for (int i = 0, displayListSize = displayList.size(); i < displayListSize; i++) {
+            int[] displayPos = displayList.get(i);
+            this.addGuiTextField(String.valueOf(displayPos[0]), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
+            this.addGuiTextField(String.valueOf(displayPos[1]), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
+            this.addGuiTextField(String.valueOf(displayPos[2]), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
+            this.buttonList.add(new GuiButton(7000 + i, this.width / 2 + 55, nHeight, 20, 20, "+"));
+            if (i != 0) {
+                this.buttonList.add(new GuiButton(8000 + i, this.width / 2 + 80, nHeight, 20, 20, "-"));
+            }
+            nHeight += 25;
+        }
+//        nHeight += 25;
         this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, nHeight + 5, "", this.above));
     }
 
@@ -111,6 +134,14 @@ public class GUISignalController extends GuiScreenCustom {
             this.mc.displayGuiScreen(null);
         } else if (button.id == 1) { //signalTypeボタン
             this.signalType = (SignalType) this.getNextEnum(this.signalType);
+        } else if (button.id >= 8000) {
+            this.saveValue();
+            this.displayPosList.remove(button.id - 8000);
+            this.initGui();
+        } else if (button.id >= 7000) {
+            this.saveValue();
+            this.displayPosList.add(button.id - 7000 + 1, new int[3]);
+            this.initGui();
         } else if (button.id >= 6000) {
             this.saveValue();
             this.nextSignalList.remove(button.id - 6000);
@@ -143,25 +174,33 @@ public class GUISignalController extends GuiScreenCustom {
         SignalControllerCore.NETWORK_WRAPPER.sendToServer(new PacketSignalController(
                 this.tile,
                 this.signalType,
+                this.last,
+                this.repeat,
+                this.reducedSpeed,
                 this.nextSignalList.toArray(new int[this.nextSignalList.size()][]),
-                this.displayPos,
+                this.displayPosList.toArray(new int[this.displayPosList.size()][]),
                 this.above
         ));
     }
 
     private void saveValue() {
-        int size = this.nextSignalList.size();
-        for (int i = 0; i < size; i++) {
+        this.last = ((GuiCheckBox) this.buttonList.get(1)).isChecked();
+        this.repeat = ((GuiCheckBox) this.buttonList.get(2)).isChecked();
+        this.reducedSpeed = ((GuiCheckBox) this.buttonList.get(3)).isChecked();
+        int nextSignalSize = this.nextSignalList.size();
+        for (int i = 0; i < nextSignalSize; i++) {
             this.nextSignalList.set(i, new int[]{
                     this.getIntGuiTextFieldText(3 * i),
                     this.getIntGuiTextFieldText(3 * i + 1),
                     this.getIntGuiTextFieldText(3 * i + 2)});
         }
-        this.displayPos = new int[]{
-                this.getIntGuiTextFieldText(this.textFieldList.size() - 3),
-                this.getIntGuiTextFieldText(this.textFieldList.size() - 2),
-                this.getIntGuiTextFieldText(this.textFieldList.size() - 1)
-        };
+        int displayPosSize = this.displayPosList.size();
+        for(int i = 0; i < displayPosSize; i++) {
+            this.displayPosList.set(i, new int[]{
+                    this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i),
+                    this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 1),
+                    this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 2)});
+        }
         this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
     }
 

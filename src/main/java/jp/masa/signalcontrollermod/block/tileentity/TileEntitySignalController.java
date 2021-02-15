@@ -14,14 +14,20 @@ import java.util.List;
 public class TileEntitySignalController extends TileEntityCustom {
     private SignalType signalType;
     private int[][] nextSignal;
-    private int[] displayPos;
+    private int[][] displayPos;
     private boolean above;
+    private boolean last;
+    private boolean repeat;
+    private  boolean reducedSpeed;
 
     public TileEntitySignalController() {
         this.signalType = SignalType.signal3;
         this.nextSignal = new int[][]{{0, 0, 0}};
-        this.displayPos = new int[]{0, 0, 0};
-        this.above = true;
+        this.displayPos = new int[][]{{0, 0, 0}};
+        this.above = false;
+        this.last = false;
+        this.repeat = false;
+        this.reducedSpeed = false;
     }
 
     @Override
@@ -38,28 +44,29 @@ public class TileEntitySignalController extends TileEntityCustom {
                     nextSignalList.add((int) nextSignal);
                 }
             }
-            int nextSignalLevel = nextSignalList.stream().mapToInt(v -> v).max().orElse(0);
+            int nextSignalLevel = (this.last) ? 1 : nextSignalList.stream().mapToInt(v -> v).max().orElse(0);
 
             // RS入力(停止現示)
             boolean isRSPowered = world.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord); //レッドストーン確認
 
             //表示する信号機の制御
             //変化したときだけ変更するようにすることで負荷を減らすこと
-            int signalLevel = this.signalType.upSignalLevel(nextSignalLevel);
+            int signalLevel = (this.repeat && (3 <= nextSignalLevel && nextSignalLevel <= 4)) ? nextSignalLevel : this.signalType.upSignalLevel(nextSignalLevel);
             Object currentSignal;
             if (signalLevel > MAXSIGNALLEVEL) signalLevel = MAXSIGNALLEVEL;
             if (isRSPowered) signalLevel = 1;
 
-            for (int i = 0; i < displayPos.length; i++) {
-                if (this.above) {
-                    currentSignal = getSignalAbove(world);
-                    if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
-                }
+            if (this.above) {
+                currentSignal = getSignalAbove(world);
+                if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
+            }
 
-                if (!(this.displayPos[0] == 0 && this.displayPos[1] == 0 && this.displayPos[2] == 0)) {
-                    currentSignal = getSignal(world, displayPos[0], displayPos[1], displayPos[2]);
-                    if (currentSignal != null && (int) currentSignal != signalLevel)
-                        setSignal(world, displayPos[0], displayPos[1], displayPos[2], signalLevel);
+            for (int[] pos : this.displayPos) {
+                if (!(pos[0] == 0 && pos[1] == 0 && pos[2] == 0)) {
+                    currentSignal = getSignal(world, pos[0], pos[1], pos[2]);
+                    if (currentSignal != null && (int) currentSignal != signalLevel) {
+                        setSignal(world, pos[0], pos[1], pos[2], signalLevel);
+                    }
                 }
             }
         }
@@ -104,20 +111,37 @@ public class TileEntitySignalController extends TileEntityCustom {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.signalType = SignalType.getType(nbt.getString("signalType"));
-        int size = nbt.getInteger("nextSignalSize");
-        if (size == 0) {
+        this.last = nbt.getBoolean("last");
+        this.repeat = nbt.getBoolean("repeat");
+        this.reducedSpeed = nbt.getBoolean("reducedSpeed");
+        // nextSignal
+        int nextSignalSize = nbt.getInteger("nextSignalSize");
+        if (nextSignalSize == 0) {
             int[] nextSignal0 = nbt.getIntArray("nextSignal0");
             if (nextSignal0 == null) {
                 nextSignal0 = new int[3];
             }
             this.nextSignal[0] = nextSignal0;
         } else {
-            this.nextSignal = new int[size][];
-            for (int i = 0; i < size; i++) {
+            this.nextSignal = new int[nextSignalSize][];
+            for (int i = 0; i < nextSignalSize; i++) {
                 this.nextSignal[i] = nbt.getIntArray("nextSignal" + i);
             }
         }
-        this.displayPos = nbt.getIntArray("displayPos");
+        // displayPos
+        int displayPosSize = nbt.getInteger("displayPosSize");
+        if (displayPosSize == 0) {
+            int[] displayPos0 = nbt.getIntArray("displayPos0");
+            if (displayPos0 == null) {
+                displayPos0 = new int[3];
+            }
+            this.displayPos[0] = displayPos0;
+        } else {
+            this.displayPos = new int[displayPosSize][];
+            for (int i = 0; i < displayPosSize; i++) {
+                this.displayPos[i] = nbt.getIntArray("displayPos" + i);
+            }
+        }
         this.above = nbt.getBoolean("above");
     }
 
@@ -125,12 +149,21 @@ public class TileEntitySignalController extends TileEntityCustom {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setString("signalType", this.signalType.toString());
-        int size = this.nextSignal.length;
-        nbt.setInteger("nextSignalSize", size);
-        for (int i = 0; i < size; i++) {
+        nbt.setBoolean("last", this.last);
+        nbt.setBoolean("repeat", this.repeat);
+        nbt.setBoolean("reducedSpeed", this.reducedSpeed);
+        // nextSignal
+        int nextSignalSize = this.nextSignal.length;
+        nbt.setInteger("nextSignalSize", nextSignalSize);
+        for (int i = 0; i < nextSignalSize; i++) {
             nbt.setIntArray("nextSignal" + i, this.nextSignal[i]);
         }
-        nbt.setIntArray("displayPos", this.displayPos);
+        // displayPos
+        int displayPosSize = this.displayPos.length;
+        nbt.setInteger("displayPosSize", displayPosSize);
+        for (int i = 0; i < displayPosSize; i++) {
+            nbt.setIntArray("displayPos" + i, this.displayPos[i]);
+        }
         nbt.setBoolean("above", this.above);
     }
 
@@ -166,17 +199,43 @@ public class TileEntitySignalController extends TileEntityCustom {
         return true;
     }
 
-    public int[] getDisplayPos() {
+    public int[][] getDisplayPos() {
         return displayPos;
     }
 
-    public void setDisplayPos(int[] displayPos) {
+    public void setDisplayPos(int[][] displayPos) {
         this.displayPos = displayPos;
     }
 
-    public boolean isAbove() {
-        return above;
+    public boolean addDisplayPos(int[] displayPos) {
+        List<int[]> displayPosList = new ArrayList<>(Arrays.asList(this.displayPos));
+        int[] pos000 = new int[]{0, 0, 0};
+        for (int[] pos : displayPosList) {
+            if (Arrays.equals(pos, displayPos)) {
+                return false;
+            } else if (Arrays.equals(pos, new int[]{0, 0, 0})) {
+                pos000 = pos;
+            }
+        }
+        displayPosList.remove(pos000);
+        displayPosList.add(displayPos);
+        this.displayPos = displayPosList.toArray(new int[displayPosList.size()][]);
+        return true;
     }
+
+    public boolean isLast() { return last; }
+
+    public void setLast(boolean last) { this.last = last; }
+
+    public boolean isRepeat() { return repeat; }
+
+    public void setRepeat(boolean repeat) { this.repeat = repeat; }
+
+    public boolean isReducedSpeed() { return reducedSpeed; }
+
+    public void setReducedSpeed(boolean reducedSpeed) { this.reducedSpeed = reducedSpeed; }
+
+    public boolean isAbove() { return above; }
 
     public void setAbove(boolean above) {
         this.above = above;
