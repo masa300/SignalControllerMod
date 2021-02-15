@@ -131,7 +131,7 @@ public class TileEntitySignalController extends TileEntityCustom {
         // displayPos
         int displayPosSize = nbt.getInteger("displayPosSize");
         if (displayPosSize == 0) {
-            int[] displayPos0 = nbt.getIntArray("displayPos0");
+            int[] displayPos0 = nbt.getIntArray("displayPos");
             if (displayPos0 == null) {
                 displayPos0 = new int[3];
             }
