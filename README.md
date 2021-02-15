@@ -64,7 +64,7 @@
 # 履歴
 |日付|バージョン|説明|備考|
 |:---:|:---:|:---|:---|
-|2020/12/25|SignalControllerMod-v1.2.0|正式リリース開始|座標を直接入力しても保存されないバグあり|
+|2020/12/25|SignalControllerMod-v1.2.1|座標設定が保存されないバグを修正|正式リリース開始|
 |2020/11/19|SignalControllerMod-v1.2.0|大量に設置すると動作が重くなるバグを修正||
 |2020/11/10|SignalControllerMod-v1.1.1|aboveの設定が保存されないバグを修正||
 |2020/11/05|SignalControllerMod-v1.1.0|nextSignalを複数登録可能になった||
