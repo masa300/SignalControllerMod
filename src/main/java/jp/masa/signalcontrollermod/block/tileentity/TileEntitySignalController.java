@@ -25,7 +25,9 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
     public TileEntitySignalController() {
         this.signalType = SignalType.signal3;
         this.nextSignal = new ArrayList<>();
+        this.nextSignal.add(BlockPos.ORIGIN);
         this.displayPos = new ArrayList<>();
+        this.displayPos.add(BlockPos.ORIGIN);
         this.above = false;
         this.last = false;
         this.repeat = false;
