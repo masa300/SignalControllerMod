@@ -173,9 +173,12 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         for (BlockPos pos : this.nextSignal) {
             if (pos.equals(nextSignalPos)) {
                 return false;
-            } else if (pos.equals(BlockPos.ORIGIN)) {
+            } else if (nextSignalPos.equals(BlockPos.ORIGIN)) {
                 return true;
             }
+        }
+        if (this.nextSignal.get(0).equals(BlockPos.ORIGIN)) {
+            this.nextSignal.remove(0);
         }
         this.nextSignal.add(nextSignalPos);
         return true;
@@ -193,9 +196,12 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         for (BlockPos pos : this.displayPos) {
             if (pos.equals(displayPos)) {
                 return false;
-            } else if (pos.equals(BlockPos.ORIGIN)) {
+            } else if (displayPos.equals(BlockPos.ORIGIN)) {
                 return true;
             }
+        }
+        if (this.displayPos.get(0).equals(BlockPos.ORIGIN)) {
+            this.displayPos.remove(0);
         }
         this.displayPos.add(displayPos);
         return true;
