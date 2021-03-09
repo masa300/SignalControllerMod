@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
 import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
 import jp.ngt.ngtlib.network.PacketNBT;
-import jp.ngt.ngtlib.util.NGTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

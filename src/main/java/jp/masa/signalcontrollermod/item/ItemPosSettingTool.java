@@ -5,7 +5,6 @@ import jp.masa.signalcontrollermod.SignalControllerCore;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
 import jp.ngt.ngtlib.io.NGTLog;
 import jp.ngt.ngtlib.network.PacketNBT;
-import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemPosSettingTool extends Item {
 
