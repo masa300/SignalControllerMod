@@ -1,5 +1,5 @@
 #hogehoge hugahuga
-tile.SignalControllerMod:SignalController.name=SignalControllerBlock
+tile.signalcontroller.name=SignalControllerBlock
 SignalControllerMod.gui.signalType.signal2a=2 Signals A
 SignalControllerMod.gui.signalType.signal2b=2 Signals B
 SignalControllerMod.gui.signalType.signal3=3 Signals
@@ -9,5 +9,5 @@ SignalControllerMod.gui.signalType.signal5a=5 Signals A
 SignalControllerMod.gui.signalType.signal5b=5 Signals B
 SignalControllerMod.gui.signalType.signal6=6 Signals
 
-item.SignalControllerMod:ItemPosSettingTool.0.name=Pos Setting Tool(NextSignal)
-item.SignalControllerMod:ItemPosSettingTool.1.name=Pos Setting Tool(DisplayPos)
+item.signalcontrollermod:itempossettingtool.0.name=Pos Setting Tool(NextSignal)
+item.signalcontrollermod:itempossettingtool.1.name=Pos Setting Tool(DisplayPos)
