@@ -5,25 +5,27 @@ import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileEntitySignalController extends TileEntityCustom {
+public class TileEntitySignalController extends TileEntityCustom implements ITickable {
     private SignalType signalType;
-    private int[][] nextSignal;
-    private int[][] displayPos;
+    private List<BlockPos> nextSignal;
+    private List<BlockPos> displayPos;
     private boolean above;
     private boolean last;
     private boolean repeat;
-    private  boolean reducedSpeed;
+    private boolean reducedSpeed;
 
     public TileEntitySignalController() {
         this.signalType = SignalType.signal3;
-        this.nextSignal = new int[][]{{0, 0, 0}};
-        this.displayPos = new int[][]{{0, 0, 0}};
+        this.nextSignal = new ArrayList<>();
+        this.displayPos = new ArrayList<>();
         this.above = false;
         this.last = false;
         this.repeat = false;
@@ -31,14 +33,14 @@ public class TileEntitySignalController extends TileEntityCustom {
     }
 
     @Override
-    public void updateEntity() {
-        World world = this.getWorldObj();
+    public void update() {
+        World world = this.getWorld();
         if (!world.isRemote) {
             int MAXSIGNALLEVEL = 6;
             List<Integer> nextSignalList = new ArrayList<>();
 
-            for (int[] pos : this.nextSignal) {
-                Object nextSignal = this.getSignal(world, pos[0], pos[1], pos[2]);
+            for (BlockPos blockPos : this.nextSignal) {
+                Object nextSignal = this.getSignal(world, blockPos);
 
                 if (nextSignal instanceof Integer) {
                     nextSignalList.add((int) nextSignal);
@@ -47,7 +49,7 @@ public class TileEntitySignalController extends TileEntityCustom {
             int nextSignalLevel = (this.last) ? 1 : nextSignalList.stream().mapToInt(v -> v).max().orElse(0);
 
             // RS入力(停止現示)
-            boolean isRSPowered = world.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord); //レッドストーン確認
+            boolean isRSPowered = world.isBlockIndirectlyGettingPowered(this.pos) > 0; //レッドストーン確認
 
             //表示する信号機の制御
             //変化したときだけ変更するようにすることで負荷を減らすこと
@@ -61,28 +63,26 @@ public class TileEntitySignalController extends TileEntityCustom {
                 if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
             }
 
-            for (int[] pos : this.displayPos) {
-                if (!(pos[0] == 0 && pos[1] == 0 && pos[2] == 0)) {
-                    currentSignal = getSignal(world, pos[0], pos[1], pos[2]);
-                    if (currentSignal != null && (int) currentSignal != signalLevel) {
-                        setSignal(world, pos[0], pos[1], pos[2], signalLevel);
-                    }
+            for (BlockPos blockPos : this.displayPos) {
+                currentSignal = getSignal(world, blockPos);
+                if (currentSignal != null && (int) currentSignal != signalLevel) {
+                    setSignal(world, blockPos, signalLevel);
                 }
             }
         }
     }
 
-    private Object getSignal(World world, int x, int y, int z) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+    private Object getSignal(World world, BlockPos blockPos) {
+        TileEntity tileEntity = world.getTileEntity(blockPos);
         if (tileEntity instanceof TileEntitySignal)
             return NGTUtil.getField(TileEntitySignal.class, tileEntity, "signalLevel");
         return null;
     }
 
-    private void setSignal(World world, int x, int y, int z, int level) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+    private void setSignal(World world, BlockPos blockPos, int level) {
+        TileEntity tileEntity = world.getTileEntity(blockPos);
         if (tileEntity instanceof TileEntitySignal) {
-            ((TileEntitySignal) tileEntity).setElectricity(x, y, z, level);
+            ((TileEntitySignal) tileEntity).setElectricity(blockPos.getX(), blockPos.getY(), blockPos.getZ(), level);
         }
     }
 
@@ -91,7 +91,7 @@ public class TileEntitySignalController extends TileEntityCustom {
 
         if (world == null) return null;
         for (int i = 1; i <= searchMaxCount; i++) {
-            TileEntity tileEntity = world.getTileEntity(this.xCoord, this.yCoord + i, this.zCoord);
+            TileEntity tileEntity = world.getTileEntity(this.pos.up(i));
             if (tileEntity instanceof TileEntitySignal)
                 return NGTUtil.getField(TileEntitySignal.class, tileEntity, "signalLevel");
         }
@@ -103,7 +103,7 @@ public class TileEntitySignalController extends TileEntityCustom {
 
         if (world == null) return;
         for (int i = 1; i <= searchMaxCount; i++) {
-            setSignal(world, this.xCoord, this.yCoord + i, this.zCoord, level);
+            setSignal(world, this.pos.up(i), level);
         }
     }
 
@@ -116,55 +116,40 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.reducedSpeed = nbt.getBoolean("reducedSpeed");
         // nextSignal
         int nextSignalSize = nbt.getInteger("nextSignalSize");
-        if (nextSignalSize == 0) {
-            int[] nextSignal0 = nbt.getIntArray("nextSignal0");
-            if (nextSignal0 == null) {
-                nextSignal0 = new int[3];
-            }
-            this.nextSignal[0] = nextSignal0;
-        } else {
-            this.nextSignal = new int[nextSignalSize][];
-            for (int i = 0; i < nextSignalSize; i++) {
-                this.nextSignal[i] = nbt.getIntArray("nextSignal" + i);
-            }
+        this.nextSignal = new ArrayList<>();
+        for (int i = 0; i < nextSignalSize; i++) {
+            this.nextSignal.add(BlockPos.fromLong(nbt.getLong("nextSignal" + i)));
         }
         // displayPos
         int displayPosSize = nbt.getInteger("displayPosSize");
-        if (displayPosSize == 0) {
-            int[] displayPos0 = nbt.getIntArray("displayPos0");
-            if (displayPos0 == null) {
-                displayPos0 = new int[3];
-            }
-            this.displayPos[0] = displayPos0;
-        } else {
-            this.displayPos = new int[displayPosSize][];
-            for (int i = 0; i < displayPosSize; i++) {
-                this.displayPos[i] = nbt.getIntArray("displayPos" + i);
-            }
+        this.displayPos = new ArrayList<>();
+        for (int i = 0; i < displayPosSize; i++) {
+            this.displayPos.add(BlockPos.fromLong(nbt.getLong("displayPos" + i)));
         }
         this.above = nbt.getBoolean("above");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setString("signalType", this.signalType.toString());
         nbt.setBoolean("last", this.last);
         nbt.setBoolean("repeat", this.repeat);
         nbt.setBoolean("reducedSpeed", this.reducedSpeed);
         // nextSignal
-        int nextSignalSize = this.nextSignal.length;
+        int nextSignalSize = this.nextSignal.size();
         nbt.setInteger("nextSignalSize", nextSignalSize);
         for (int i = 0; i < nextSignalSize; i++) {
-            nbt.setIntArray("nextSignal" + i, this.nextSignal[i]);
+            nbt.setLong("nextSignal" + i, this.nextSignal.get(i).toLong());
         }
         // displayPos
-        int displayPosSize = this.displayPos.length;
+        int displayPosSize = this.displayPos.size();
         nbt.setInteger("displayPosSize", displayPosSize);
         for (int i = 0; i < displayPosSize; i++) {
-            nbt.setIntArray("displayPos" + i, this.displayPos[i]);
+            nbt.setLong("displayPos" + i, this.displayPos.get(i).toLong());
         }
         nbt.setBoolean("above", this.above);
+        return nbt;
     }
 
     public SignalType getSignalType() {
@@ -175,67 +160,73 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.signalType = signalType;
     }
 
-    public int[][] getNextSignal() {
+    public List<BlockPos> getNextSignal() {
         return nextSignal;
     }
 
-    public void setNextSignal(int[][] nextSignal) {
+    public void setNextSignal(List<BlockPos> nextSignal) {
         this.nextSignal = nextSignal;
     }
 
-    public boolean addNextSignal(int[] nextSignalPos) {
-        List<int[]> nextSignalList = new ArrayList<>(Arrays.asList(this.nextSignal));
-        int[] pos000 = new int[]{0, 0, 0};
-        for (int[] pos : nextSignalList) {
-            if (Arrays.equals(pos, nextSignalPos)) {
+    public boolean addNextSignal(BlockPos nextSignalPos) {
+        for (BlockPos pos : this.nextSignal) {
+            if (pos.equals(nextSignalPos)) {
                 return false;
-            } else if (Arrays.equals(pos, new int[]{0, 0, 0})) {
-                pos000 = pos;
+            } else if (pos.equals(BlockPos.ORIGIN)) {
+                return true;
             }
         }
-        nextSignalList.remove(pos000);
-        nextSignalList.add(nextSignalPos);
-        this.nextSignal = nextSignalList.toArray(new int[nextSignalList.size()][]);
+        this.nextSignal.add(nextSignalPos);
         return true;
     }
 
-    public int[][] getDisplayPos() {
+    public List<BlockPos> getDisplayPos() {
         return displayPos;
     }
 
-    public void setDisplayPos(int[][] displayPos) {
+    public void setDisplayPos(List<BlockPos> displayPos) {
         this.displayPos = displayPos;
     }
 
-    public boolean addDisplayPos(int[] displayPos) {
-        List<int[]> displayPosList = new ArrayList<>(Arrays.asList(this.displayPos));
-        int[] pos000 = new int[]{0, 0, 0};
-        for (int[] pos : displayPosList) {
-            if (Arrays.equals(pos, displayPos)) {
+    public boolean addDisplayPos(BlockPos displayPos) {
+        for (BlockPos pos : this.displayPos) {
+            if (pos.equals(displayPos)) {
                 return false;
-            } else if (Arrays.equals(pos, new int[]{0, 0, 0})) {
-                pos000 = pos;
+            } else if (pos.equals(BlockPos.ORIGIN)) {
+                return true;
             }
         }
-        displayPosList.remove(pos000);
-        displayPosList.add(displayPos);
-        this.displayPos = displayPosList.toArray(new int[displayPosList.size()][]);
+        this.displayPos.add(displayPos);
         return true;
     }
 
-    public boolean isLast() { return last; }
+    public boolean isLast() {
+        return last;
+    }
 
-    public void setLast(boolean last) { this.last = last; }
+    public void setLast(boolean last) {
+        this.last = last;
+    }
 
-    public boolean isRepeat() { return repeat; }
+    public boolean isRepeat() {
+        return repeat;
+    }
 
-    public void setRepeat(boolean repeat) { this.repeat = repeat; }
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
+    }
 
-    public boolean isReducedSpeed() { return reducedSpeed; }
+    public boolean isReducedSpeed() {
+        return reducedSpeed;
+    }
 
-    public void setReducedSpeed(boolean reducedSpeed) { this.reducedSpeed = reducedSpeed; }
+    public void setReducedSpeed(boolean reducedSpeed) {
+        this.reducedSpeed = reducedSpeed;
+    }
 
-    public boolean isAbove() { return above; }
+    public boolean isAbove() {
+        return above;
+    }
 
     public void setAbove(boolean above) {
         this.above = above;

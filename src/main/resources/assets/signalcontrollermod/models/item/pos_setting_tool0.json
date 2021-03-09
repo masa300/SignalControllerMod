@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "signalcontrollermod:items/pos_setting_tool0.png"
+    }
+}

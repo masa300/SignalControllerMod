@@ -1,90 +1,79 @@
 package jp.masa.signalcontrollermod.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import jp.masa.signalcontrollermod.CreativeTabSignalController;
 import jp.masa.signalcontrollermod.SignalControllerCore;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
 import jp.ngt.ngtlib.io.NGTLog;
+import jp.ngt.ngtlib.network.PacketNBT;
 import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemPosSettingTool extends Item {
-    @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
 
     public ItemPosSettingTool() {
         super();
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabSignalController.tabUtils);
-        this.setUnlocalizedName(SignalControllerCore.MODID + ":" + "ItemPosSettingTool");
+        this.setUnlocalizedName(SignalControllerCore.MODID + ":" + "itempossettingtool");
+        this.setRegistryName(SignalControllerCore.MODID, "itempossettingtool");
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos blockPos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            ItemStack itemStack = player.getHeldItem(hand);
+            TileEntity tileEntity = world.getTileEntity(blockPos);
             if (tileEntity instanceof TileEntitySignal) {
-                if (!itemStack.hasTagCompound()) {
+                NBTTagCompound tag = itemStack.getTagCompound();
+                if (tag == null) {
                     itemStack.setTagCompound(new NBTTagCompound());
                 }
-                itemStack.getTagCompound().setIntArray("pos", new int[]{x, y, z});
-                NGTLog.sendChatMessage(player, String.format("Position saved!(%s, %s ,%s)", x, y, z));
+                itemStack.getTagCompound().setLong("pos", blockPos.toLong());
+                NGTLog.sendChatMessage(player, String.format("Position saved!(%s)", blockPos.toString()));
             } else if (tileEntity instanceof TileEntitySignalController) {
-                if (itemStack.hasTagCompound()) {
-                    NBTTagCompound tag = itemStack.getTagCompound();
-                    int[] pos = tag.getIntArray("pos");
+                NBTTagCompound tag = itemStack.getTagCompound();
+                if (tag != null && tag.hasKey("pos")) {
+                    BlockPos pos = BlockPos.fromLong(tag.getLong("pos"));
                     if (itemStack.getItemDamage() == 0) {
                         boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(pos);
                         if (added) {
-                            NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
-                        }else{
-                            NGTLog.sendChatMessage(player,"NextSignal already added");
+                            NGTLog.sendChatMessage(player, String.format("NextSignal added (%s)!", pos.toString()));
+                        } else {
+                            NGTLog.sendChatMessage(player, "NextSignal already added");
                         }
                     } else if (itemStack.getItemDamage() == 1) {
                         boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(pos);
-                        if(added) {
-                            NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                        if (added) {
+                            NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s)!", pos.toString()));
                         } else {
-                            NGTLog.sendChatMessage(player,"DisplayPos already added");
+                            NGTLog.sendChatMessage(player, "DisplayPos already added");
                         }
                     }
-                    NGTUtil.sendPacketToClient(tileEntity);
+                    PacketNBT.sendToClient(tileEntity);
                 }
             }
         }
-        return false;
+        return EnumActionResult.SUCCESS;
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
-        list.add(new ItemStack(item, 1, 0));
-        list.add(new ItemStack(item, 1, 1));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage) {
-        return this.icons[damage];
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        this.icons = new IIcon[2];
-        this.icons[0] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "Pos_Setting_Tool0");
-        this.icons[1] = register.registerIcon(SignalControllerCore.MODID.toLowerCase() + ":" + "Pos_Setting_Tool1");
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        items.add(new ItemStack(this, 1, 0));
+        items.add(new ItemStack(this, 1, 1));
     }
 
     @Override

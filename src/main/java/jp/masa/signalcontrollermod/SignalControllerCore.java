@@ -1,21 +1,38 @@
 package jp.masa.signalcontrollermod;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
+
+import jp.masa.signalcontrollermod.block.SignalController;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
 import jp.masa.signalcontrollermod.gui.SignalControllerGUIHandler;
+import jp.masa.signalcontrollermod.item.ItemPosSettingTool;
 import jp.masa.signalcontrollermod.network.PacketSignalController;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = SignalControllerCore.MODID, version = SignalControllerCore.VERSION, name = SignalControllerCore.MODID)
 public class SignalControllerCore {
-    public static final String MODID = "SignalControllerMod";
+    public static final String MODID = "signalcontrollermod";
     public static final String VERSION = "1.3.0";
+
+
+    public static Block SIGNAL_CONTROLLER_BLOCK = new SignalController();
+    public static Item POS_SETTING_TOOL = new ItemPosSettingTool();
 
     @Mod.Instance(MODID)
     public static SignalControllerCore INSTANCE;
@@ -24,17 +41,37 @@ public class SignalControllerCore {
 
     public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
-    @EventHandler
+
+    @Mod.EventHandler
+    public void construct(FMLConstructionEvent event) {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> event) {
+        event.getRegistry().register(POS_SETTING_TOOL);
+        event.getRegistry().register(new ItemBlock(SIGNAL_CONTROLLER_BLOCK).setRegistryName(SignalControllerCore.MODID, "signalcontroller"));
+
+    }
+
+    @SubscribeEvent
+    public void registerBlocks(RegistryEvent.Register<Block> event) {
+        event.getRegistry().register(SIGNAL_CONTROLLER_BLOCK);
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void registerModels(ModelRegistryEvent event) {
+        ModelLoader.setCustomModelResourceLocation(POS_SETTING_TOOL, 0, new ModelResourceLocation(new ResourceLocation(SignalControllerCore.MODID, "Pos_Setting_Tool0"), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(POS_SETTING_TOOL, 1, new ModelResourceLocation(new ResourceLocation(SignalControllerCore.MODID, "Pos_Setting_Tool1"), "inventory"));
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(SIGNAL_CONTROLLER_BLOCK), 0, new ModelResourceLocation(new ResourceLocation(SignalControllerCore.MODID, "signalcontroller"), "inventory"));
+    }
+
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new SignalControllerGUIHandler());
         NETWORK_WRAPPER.registerMessage(PacketSignalController.class, PacketSignalController.class, 0, Side.SERVER);
-        GameRegistry.registerTileEntity(TileEntitySignalController.class, "TE_SignalController");
-    }
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        // Block登録
-        new SignalControllerBlock().preInit();
-        new SignalControllerItem().preInit();
+        GameRegistry.registerTileEntity(TileEntitySignalController.class, new ResourceLocation(SignalControllerCore.MODID, "TE_SignalController"));
     }
 }

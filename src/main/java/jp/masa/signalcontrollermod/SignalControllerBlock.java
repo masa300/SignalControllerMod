@@ -1,13 +1,13 @@
 package jp.masa.signalcontrollermod;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import jp.masa.signalcontrollermod.block.SignalController;
 import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class SignalControllerBlock {
     public static Block blockATSController;
 
     public void preInit() {
-        GameRegistry.registerBlock(blockATSController = new SignalController(), "ATSController");
+        ForgeRegistries.BLOCKS.register(blockATSController = new SignalController());
     }
 }

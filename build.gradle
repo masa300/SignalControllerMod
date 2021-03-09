@@ -16,7 +16,7 @@ apply plugin: "com.wynprice.cursemaven"
 
 version = "1"
 group = "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+archivesBaseName = "SignalControllerMod"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -58,8 +58,8 @@ dependencies {
 	// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 	// http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-	compile "curse.maven:ngtlib:2940833"
-	compile "curse.maven:realtrainmod:3039063"
+	compile "curse.maven:ngtlib:3003745"
+	compile "curse.maven:realtrainmod:3061973"
 }
 
 processResources {
