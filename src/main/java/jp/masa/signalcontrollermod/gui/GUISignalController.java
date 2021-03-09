@@ -97,7 +97,7 @@ public class GUISignalController extends GuiScreenCustom {
             this.addGuiTextField(textFieldId++, String.valueOf(nextSignal.getY()), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(textFieldId++, String.valueOf(nextSignal.getZ()), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
             this.buttonList.add(new GuiButton(5000 + i, this.width / 2 + 55, nHeight, 20, 20, "+"));
-            if (i != 0) {
+            if (signalList.size() > 1) {
                 this.buttonList.add(new GuiButton(6000 + i, this.width / 2 + 80, nHeight, 20, 20, "-"));
             }
             nHeight += 25;
@@ -109,7 +109,7 @@ public class GUISignalController extends GuiScreenCustom {
             this.addGuiTextField(textFieldId++, String.valueOf(displayPos.getY()), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(textFieldId++, String.valueOf(displayPos.getZ()), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
             this.buttonList.add(new GuiButton(7000 + i, this.width / 2 + 55, nHeight, 20, 20, "+"));
-            if (i != 0) {
+            if (displayList.size() > 1) {
                 this.buttonList.add(new GuiButton(8000 + i, this.width / 2 + 80, nHeight, 20, 20, "-"));
             }
             nHeight += 25;
