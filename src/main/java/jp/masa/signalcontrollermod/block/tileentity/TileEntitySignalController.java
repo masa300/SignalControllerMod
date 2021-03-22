@@ -110,29 +110,22 @@ public class TileEntitySignalController extends TileEntityCustom {
         // nextSignal
         int nextSignalSize = nbt.getInteger("nextSignalSize");
         if (nextSignalSize == 0) {
-            int[] nextSignal0 = nbt.getIntArray("nextSignal0");
-            if (nextSignal0 == null) {
-                nextSignal0 = new int[3];
-            }
-            this.nextSignal[0] = nextSignal0;
+            this.nextSignal[0] = this.getIntArray(nbt,"nextSignal0");
         } else {
-            this.nextSignal = new int[nextSignalSize][];
+            this.nextSignal = new int[nextSignalSize][3];
             for (int i = 0; i < nextSignalSize; i++) {
-                this.nextSignal[i] = nbt.getIntArray("nextSignal" + i);
+                this.nextSignal[i] = this.getIntArray(nbt, "nextSignal" + i);
             }
         }
         // displayPos
         int displayPosSize = nbt.getInteger("displayPosSize");
         if (displayPosSize == 0) {
-            int[] displayPos0 = nbt.getIntArray("displayPos");
-            if (displayPos0 == null) {
-                displayPos0 = new int[3];
-            }
-            this.displayPos[0] = displayPos0;
+            this.displayPos[0] = this.getIntArray(nbt, "displayPos");
         } else {
-            this.displayPos = new int[displayPosSize][];
+            this.displayPos = new int[displayPosSize][3];
             for (int i = 0; i < displayPosSize; i++) {
-                this.displayPos[i] = nbt.getIntArray("displayPos" + i);
+                this.displayPos[i] = this.getIntArray(nbt, "displayPos" + i);
+
             }
         }
         this.above = nbt.getBoolean("above");
@@ -158,6 +151,11 @@ public class TileEntitySignalController extends TileEntityCustom {
             nbt.setIntArray("displayPos" + i, this.displayPos[i]);
         }
         nbt.setBoolean("above", this.above);
+    }
+
+    private int[] getIntArray(NBTTagCompound nbt, String key) {
+        int[] intArray = nbt.getIntArray(key);
+        return intArray.length == 0 ? new int[3] : intArray;
     }
 
     public SignalType getSignalType() {
