@@ -15,7 +15,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
     private SignalType signalType;
     private int[][] nextSignal;
     private int[][] displayPos;
-    private boolean above;
+//    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -32,7 +32,17 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         this.reducedSpeed = reducedSpeed;
         this.nextSignal = nextSignal;
         this.displayPos = displayPos;
-        this.above = above;
+//        this.above = above;
+    }
+
+    public PacketSignalController(TileEntity tileEntity, SignalType signalType, boolean last, boolean repeat, boolean reducedSpeed, int[][] nextSignal, int[][] displayPos) {
+        super(tileEntity);
+        this.signalType = signalType;
+        this.last = last;
+        this.repeat = repeat;
+        this.reducedSpeed = reducedSpeed;
+        this.nextSignal = nextSignal;
+        this.displayPos = displayPos;
     }
 
     @Override
@@ -53,7 +63,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
             buffer.writeInt(pos[1]);
             buffer.writeInt(pos[2]);
         }
-        buffer.writeBoolean(this.above);
+//        buffer.writeBoolean(this.above);
     }
 
     @Override
@@ -76,7 +86,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
             this.displayPos[i][1] = buffer.readInt();
             this.displayPos[i][2] = buffer.readInt();
         }
-        this.above = buffer.readBoolean();
+//        this.above = buffer.readBoolean();
     }
 
     //ここ鯖
@@ -90,7 +100,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         tile.setReducedSpeed(message.reducedSpeed);
         tile.setNextSignal(message.nextSignal);
         tile.setDisplayPos(message.displayPos);
-        tile.setAbove(message.above);
+//        tile.setAbove(message.above);
         NGTUtil.sendPacketToClient(tile);
         tile.markDirty();
         return null;

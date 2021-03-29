@@ -15,7 +15,8 @@ public class TileEntitySignalController extends TileEntityCustom {
     private SignalType signalType;
     private int[][] nextSignal;
     private int[][] displayPos;
-    private boolean above;
+    private int signalLevel;
+//    private boolean above;
     private boolean last;
     private boolean repeat;
     private  boolean reducedSpeed;
@@ -24,7 +25,8 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.signalType = SignalType.signal3;
         this.nextSignal = new int[][]{{0, 0, 0}};
         this.displayPos = new int[][]{{0, 0, 0}};
-        this.above = false;
+        this.signalLevel = 1;
+//        this.above = false;
         this.last = false;
         this.repeat = false;
         this.reducedSpeed = false;
@@ -38,7 +40,8 @@ public class TileEntitySignalController extends TileEntityCustom {
             List<Integer> nextSignalList = new ArrayList<>();
 
             for (int[] pos : this.nextSignal) {
-                Object nextSignal = this.getSignal(world, pos[0], pos[1], pos[2]);
+//                Object nextSignal = this.getSignal(world, pos[0], pos[1], pos[2]);
+                Object nextSignal = this.getSignalFromController(world, pos[0], pos[1], pos[2]);
 
                 if (nextSignal instanceof Integer) {
                     nextSignalList.add((int) nextSignal);
@@ -51,24 +54,24 @@ public class TileEntitySignalController extends TileEntityCustom {
 
             //表示する信号機の制御
             //変化したときだけ変更するようにすることで負荷を減らすこと
-            int signalLevel = (this.repeat && (3 <= nextSignalLevel && nextSignalLevel <= 4)) ? nextSignalLevel : this.signalType.upSignalLevel(nextSignalLevel);
+            this.signalLevel = (this.repeat && (3 <= nextSignalLevel && nextSignalLevel <= 4)) ? nextSignalLevel : this.signalType.upSignalLevel(nextSignalLevel);
             Object currentSignal;
-            if (signalLevel > MAXSIGNALLEVEL) signalLevel = MAXSIGNALLEVEL;
-            if (isRSPowered) signalLevel = 1;
+            if (this.signalLevel > MAXSIGNALLEVEL) this.signalLevel = MAXSIGNALLEVEL;
+            if (isRSPowered) this.signalLevel = 1;
 
-            if (this.above) {
-                int aboveY = this.searchSignalAboveY(world);
-                if(1 <= aboveY) {
-                    currentSignal = getSignal(world, this.xCoord, aboveY, this.zCoord);
-                    if (currentSignal != null && (int) currentSignal != signalLevel) setSignal(world, this.xCoord, aboveY, this.zCoord, signalLevel);
-                }
-            }
+//            if (this.above) {
+//                int aboveY = this.searchSignalAboveY(world);
+//                if(1 <= aboveY) {
+//                    currentSignal = getSignal(world, this.xCoord, aboveY, this.zCoord);
+//                    if (currentSignal != null && (int) currentSignal != signalLevel) setSignal(world, this.xCoord, aboveY, this.zCoord, signalLevel);
+//                }
+//            }
 
             for (int[] pos : this.displayPos) {
                 if (!(pos[0] == 0 && pos[1] == 0 && pos[2] == 0)) {
                     currentSignal = getSignal(world, pos[0], pos[1], pos[2]);
-                    if (currentSignal != null && (int) currentSignal != signalLevel) {
-                        setSignal(world, pos[0], pos[1], pos[2], signalLevel);
+                    if (currentSignal != null && (int) currentSignal != this.signalLevel) {
+                        setSignal(world, pos[0], pos[1], pos[2], this.signalLevel);
                     }
                 }
             }
@@ -87,6 +90,13 @@ public class TileEntitySignalController extends TileEntityCustom {
         if (tileEntity instanceof TileEntitySignal) {
             ((TileEntitySignal) tileEntity).setElectricity(x, y, z, level);
         }
+    }
+
+    private Object getSignalFromController(World world, int x, int y, int z) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileEntitySignalController)
+            return ((TileEntitySignalController) tileEntity).getSignalLevel();
+        return null;
     }
 
     private int searchSignalAboveY(World world) {
@@ -128,7 +138,7 @@ public class TileEntitySignalController extends TileEntityCustom {
 
             }
         }
-        this.above = nbt.getBoolean("above");
+//        this.above = nbt.getBoolean("above");
     }
 
     @Override
@@ -150,7 +160,7 @@ public class TileEntitySignalController extends TileEntityCustom {
         for (int i = 0; i < displayPosSize; i++) {
             nbt.setIntArray("displayPos" + i, this.displayPos[i]);
         }
-        nbt.setBoolean("above", this.above);
+//        nbt.setBoolean("above", this.above);
     }
 
     private int[] getIntArray(NBTTagCompound nbt, String key) {
@@ -214,6 +224,10 @@ public class TileEntitySignalController extends TileEntityCustom {
         return true;
     }
 
+    public int getSignalLevel() { return this.signalLevel; }
+
+    public void setSignalLevel(int signalLevel) { this.signalLevel = signalLevel; }
+
     public boolean isLast() { return last; }
 
     public void setLast(boolean last) { this.last = last; }
@@ -226,9 +240,7 @@ public class TileEntitySignalController extends TileEntityCustom {
 
     public void setReducedSpeed(boolean reducedSpeed) { this.reducedSpeed = reducedSpeed; }
 
-    public boolean isAbove() { return above; }
+//    public boolean isAbove() { return above; }
 
-    public void setAbove(boolean above) {
-        this.above = above;
-    }
+//    public void setAbove(boolean above) { this.above = above; }
 }

@@ -13,6 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -20,15 +21,20 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemPosSettingTool extends Item {
+public class ItemPosSettingTool extends ItemSword {
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
 
     public ItemPosSettingTool() {
-        super();
+        super(ToolMaterial.WOOD);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabSignalController.tabUtils);
         this.setUnlocalizedName(SignalControllerCore.MODID + ":" + "ItemPosSettingTool");
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        return itemStack;
     }
 
     @Override
@@ -49,15 +55,15 @@ public class ItemPosSettingTool extends Item {
                         boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(pos);
                         if (added) {
                             NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
-                        }else{
-                            NGTLog.sendChatMessage(player,"NextSignal already added");
+                        } else {
+                            NGTLog.sendChatMessage(player, "NextSignal already added");
                         }
                     } else if (itemStack.getItemDamage() == 1) {
                         boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(pos);
-                        if(added) {
+                        if (added) {
                             NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
                         } else {
-                            NGTLog.sendChatMessage(player,"DisplayPos already added");
+                            NGTLog.sendChatMessage(player, "DisplayPos already added");
                         }
                     }
                     NGTUtil.sendPacketToClient(tileEntity);

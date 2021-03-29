@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.EnumUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class GUISignalController extends GuiScreenCustom {
     private SignalType signalType;
     private List<int[]> nextSignalList;
     private List<int[]> displayPosList;
-    private boolean above;
+//    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -32,7 +33,7 @@ public class GUISignalController extends GuiScreenCustom {
         this.signalType = tile.getSignalType();
         this.nextSignalList = new ArrayList<>(Arrays.asList(tile.getNextSignal()));
         this.displayPosList = new ArrayList<>(Arrays.asList(tile.getDisplayPos()));
-        this.above = tile.isAbove();
+//        this.above = tile.isAbove();
         this.last = tile.isLast();
         this.repeat = tile.isRepeat();
         this.reducedSpeed = tile.isReducedSpeed();
@@ -114,7 +115,7 @@ public class GUISignalController extends GuiScreenCustom {
             nHeight += 25;
         }
 //        nHeight += 25;
-        this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, nHeight + 5, "", this.above));
+//        this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, nHeight + 5, "", this.above));
     }
 
     // キーボード入力時のevent
@@ -122,6 +123,10 @@ public class GUISignalController extends GuiScreenCustom {
     public void keyTyped(char par1, int par2) {
         super.keyTyped(par1, par2);
         this.textFieldList.forEach(textField -> textField.textboxKeyTyped(par1, par2));
+        if(par2  == Keyboard.KEY_RETURN){
+            this.sendPacket();
+            this.mc.displayGuiScreen(null);
+        }
     }
 
     // button押したときのevent
@@ -178,8 +183,8 @@ public class GUISignalController extends GuiScreenCustom {
                 this.repeat,
                 this.reducedSpeed,
                 this.nextSignalList.toArray(new int[this.nextSignalList.size()][]),
-                this.displayPosList.toArray(new int[this.displayPosList.size()][]),
-                this.above
+                this.displayPosList.toArray(new int[this.displayPosList.size()][])
+//                this.above
         ));
     }
 
@@ -201,7 +206,7 @@ public class GUISignalController extends GuiScreenCustom {
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 1),
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 2)});
         }
-        this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
+//        this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
     }
 
     private int getIntGuiTextFieldText(int number) {
