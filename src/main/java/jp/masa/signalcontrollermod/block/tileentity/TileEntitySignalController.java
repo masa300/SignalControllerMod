@@ -125,18 +125,14 @@ public class TileEntitySignalController extends TileEntityCustom {
             }
         } else {
             int nextSignalSize = nbt.getInteger("nextSignalSize");
-            if (nextSignalSize == 0) {
-                this.nextSignal.add(BlockPos.fromIntArray(this.getIntArray(nbt, "nextSignal0")));
-            } else {
+            if (nextSignalSize != 0) {
                 for (int i = 0; i < nextSignalSize; i++) {
                     this.nextSignal.add(BlockPos.fromIntArray(this.getIntArray(nbt, "nextSignal" + i)));
                 }
             }
             // displayPos
             int displayPosSize = nbt.getInteger("displayPosSize");
-            if (displayPosSize == 0) {
-                this.displayPos.add(BlockPos.fromIntArray(this.getIntArray(nbt, "displayPos")));
-            } else {
+            if (displayPosSize != 0) {
                 for (int i = 0; i < displayPosSize; i++) {
                     this.displayPos.add(BlockPos.fromIntArray(this.getIntArray(nbt, "displayPos" + i)));
 
