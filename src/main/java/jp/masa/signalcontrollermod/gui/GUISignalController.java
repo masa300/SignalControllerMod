@@ -13,8 +13,6 @@ import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.EnumUtils;
 import org.lwjgl.input.Mouse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GUISignalController extends GuiScreenCustom {
@@ -196,7 +194,7 @@ public class GUISignalController extends GuiScreenCustom {
                     this.getIntGuiTextFieldText(3 * i + 2)));
         }
         int displayPosSize = this.displayPosList.size();
-        for(int i = 0; i < displayPosSize; i++) {
+        for (int i = 0; i < displayPosSize; i++) {
             this.displayPosList.set(i, new BlockPos(
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i),
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 1),
