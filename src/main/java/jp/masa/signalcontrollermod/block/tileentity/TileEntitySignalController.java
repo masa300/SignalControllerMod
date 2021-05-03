@@ -24,8 +24,8 @@ public class TileEntitySignalController extends TileEntityCustom {
 
     public TileEntitySignalController() {
         this.signalType = SignalType.signal3;
-        this.nextSignal = Collections.singletonList(new BlockPos(0, 0, 0));
-        this.displayPos = Collections.singletonList(new BlockPos(0, 0, 0));
+        this.nextSignal = new ArrayList<>(Collections.singletonList(new BlockPos(0, 0, 0)));
+        this.displayPos = new ArrayList<>(Collections.singletonList(new BlockPos(0, 0, 0)));
         this.above = false;
         this.last = false;
         this.repeat = false;
