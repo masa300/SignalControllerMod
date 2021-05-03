@@ -13,7 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class PacketSignalController extends PacketTileEntity implements IMessageHandler<PacketSignalController, IMessage> {
@@ -68,7 +67,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         this.repeat = buffer.readBoolean();
         this.reducedSpeed = buffer.readBoolean();
         int nextSignalSize = buffer.readInt();
-        this.nextSignal = new ArrayList<BlockPos>();
+        this.nextSignal = new ArrayList<>();
         for (int i = 0; i < nextSignalSize; i++) {
             int X = buffer.readInt();
             int Y = buffer.readInt();
@@ -76,7 +75,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
             this.nextSignal.add(new BlockPos(X, Y, Z));
         }
         int displayPosSize = buffer.readInt();
-        this.displayPos = new LinkedList<BlockPos>();
+        this.displayPos = new ArrayList<>();
         for (int i = 0; i < displayPosSize; i++) {
             int X = buffer.readInt();
             int Y = buffer.readInt();
