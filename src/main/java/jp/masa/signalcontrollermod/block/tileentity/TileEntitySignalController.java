@@ -110,6 +110,8 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.last = nbt.getBoolean("last");
         this.repeat = nbt.getBoolean("repeat");
         this.reducedSpeed = nbt.getBoolean("reducedSpeed");
+        this.nextSignal.clear();
+        this.displayPos.clear();
         if (nbt.hasKey("nextSignalList") && nbt.hasKey("displayPosList")) {
             // nextSignal
             NBTTagList nextSignalList = nbt.getTagList("nextSignalList", 10);
