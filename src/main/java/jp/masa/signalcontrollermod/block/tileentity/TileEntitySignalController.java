@@ -120,7 +120,7 @@ public class TileEntitySignalController extends TileEntityCustom {
             // displayPos
             NBTTagList displayPosList = nbt.getTagList("displayPosList", 10);
             for (int i = 0; i < displayPosList.tagCount(); i++) {
-                NBTTagCompound tag = nextSignalList.getCompoundTagAt(i);
+                NBTTagCompound tag = displayPosList.getCompoundTagAt(i);
                 this.displayPos.add(BlockPos.readFromNBT(tag));
             }
         } else {
