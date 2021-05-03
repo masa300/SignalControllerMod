@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import jp.masa.signalcontrollermod.CreativeTabSignalController;
 import jp.masa.signalcontrollermod.SignalControllerCore;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
+import jp.masa.signalcontrollermod.utils.BlockPos;
 import jp.ngt.ngtlib.io.NGTLog;
 import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
@@ -46,14 +47,14 @@ public class ItemPosSettingTool extends Item {
                     NBTTagCompound tag = itemStack.getTagCompound();
                     int[] pos = tag.getIntArray("pos");
                     if (itemStack.getItemDamage() == 0) {
-                        boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(pos);
+                        boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(new BlockPos(pos[0], pos[1], pos[2]));
                         if (added) {
                             NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
                         }else{
                             NGTLog.sendChatMessage(player,"NextSignal already added");
                         }
                     } else if (itemStack.getItemDamage() == 1) {
-                        boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(pos);
+                        boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(new BlockPos(pos[0], pos[1], pos[2]));
                         if(added) {
                             NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
                         } else {

@@ -7,14 +7,19 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import jp.masa.signalcontrollermod.block.tileentity.TileEntitySignalController;
 import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
+import jp.masa.signalcontrollermod.utils.BlockPos;
 import jp.ngt.ngtlib.util.NGTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class PacketSignalController extends PacketTileEntity implements IMessageHandler<PacketSignalController, IMessage> {
     private SignalType signalType;
-    private int[][] nextSignal;
-    private int[][] displayPos;
+    private List<BlockPos> nextSignal;
+    private List<BlockPos> displayPos;
     private boolean above;
     private boolean last;
     private boolean repeat;
@@ -24,7 +29,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
 
     }
 
-    public PacketSignalController(TileEntity tileEntity, SignalType signalType, boolean last, boolean repeat, boolean reducedSpeed, int[][] nextSignal, int[][] displayPos, boolean above) {
+    public PacketSignalController(TileEntity tileEntity, SignalType signalType, boolean last, boolean repeat, boolean reducedSpeed, List<BlockPos> nextSignal, List<BlockPos> displayPos, boolean above) {
         super(tileEntity);
         this.signalType = signalType;
         this.last = last;
@@ -41,17 +46,17 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         buffer.writeBoolean(this.last);
         buffer.writeBoolean(this.repeat);
         buffer.writeBoolean(this.reducedSpeed);
-        buffer.writeInt(this.nextSignal.length);
-        for (int[] pos : this.nextSignal) {
-            buffer.writeInt(pos[0]);
-            buffer.writeInt(pos[1]);
-            buffer.writeInt(pos[2]);
+        buffer.writeInt(this.nextSignal.size());
+        for (BlockPos pos : this.nextSignal) {
+            buffer.writeInt(pos.X);
+            buffer.writeInt(pos.Y);
+            buffer.writeInt(pos.Z);
         }
-        buffer.writeInt(this.displayPos.length);
-        for (int[] pos : this.displayPos) {
-            buffer.writeInt(pos[0]);
-            buffer.writeInt(pos[1]);
-            buffer.writeInt(pos[2]);
+        buffer.writeInt(this.displayPos.size());
+        for (BlockPos pos : this.displayPos) {
+            buffer.writeInt(pos.X);
+            buffer.writeInt(pos.Y);
+            buffer.writeInt(pos.Z);
         }
         buffer.writeBoolean(this.above);
     }
@@ -63,18 +68,20 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         this.repeat = buffer.readBoolean();
         this.reducedSpeed = buffer.readBoolean();
         int nextSignalSize = buffer.readInt();
-        this.nextSignal = new int[nextSignalSize][3];
+        this.nextSignal = new ArrayList<BlockPos>();
         for (int i = 0; i < nextSignalSize; i++) {
-            this.nextSignal[i][0] = buffer.readInt();
-            this.nextSignal[i][1] = buffer.readInt();
-            this.nextSignal[i][2] = buffer.readInt();
+            int X = buffer.readInt();
+            int Y = buffer.readInt();
+            int Z = buffer.readInt();
+            this.nextSignal.add(new BlockPos(X, Y, Z));
         }
         int displayPosSize = buffer.readInt();
-        this.displayPos = new int[displayPosSize][3];
+        this.displayPos = new LinkedList<BlockPos>();
         for (int i = 0; i < displayPosSize; i++) {
-            this.displayPos[i][0] = buffer.readInt();
-            this.displayPos[i][1] = buffer.readInt();
-            this.displayPos[i][2] = buffer.readInt();
+            int X = buffer.readInt();
+            int Y = buffer.readInt();
+            int Z = buffer.readInt();
+            this.displayPos.add(new BlockPos(X, Y, Z));
         }
         this.above = buffer.readBoolean();
     }
