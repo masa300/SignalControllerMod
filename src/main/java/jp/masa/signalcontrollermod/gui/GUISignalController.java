@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.EnumUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.List;
@@ -119,6 +120,10 @@ public class GUISignalController extends GuiScreenCustom {
     public void keyTyped(char par1, int par2) {
         super.keyTyped(par1, par2);
         this.textFieldList.forEach(textField -> textField.textboxKeyTyped(par1, par2));
+        if(par2  == Keyboard.KEY_RETURN){
+            this.sendPacket();
+            this.mc.displayGuiScreen(null);
+        }
     }
 
     // button押したときのevent
