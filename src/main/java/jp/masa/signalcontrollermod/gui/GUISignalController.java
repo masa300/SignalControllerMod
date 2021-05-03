@@ -88,9 +88,8 @@ public class GUISignalController extends GuiScreenCustom {
         this.buttonList.add(new GuiButton(20, this.width / 2 + 10, this.height - 30, 100, 20, "キャンセル"));
 
         int nHeight = this.height / 2 - 10 + this.currentScroll;
-        List<BlockPos> signalList = this.nextSignalList;
-        for (int i = 0, signalListSize = signalList.size(); i < signalListSize; i++) {
-            BlockPos nextSignal = signalList.get(i);
+        for (int i = 0; i < this.nextSignalList.size(); i++) {
+            BlockPos nextSignal = this.nextSignalList.get(i);
             this.addGuiTextField(String.valueOf(nextSignal.X), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(String.valueOf(nextSignal.Y), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(String.valueOf(nextSignal.Z), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
@@ -100,9 +99,8 @@ public class GUISignalController extends GuiScreenCustom {
             }
             nHeight += 25;
         }
-        List<BlockPos> displayList = this.displayPosList;
-        for (int i = 0, displayListSize = displayList.size(); i < displayListSize; i++) {
-            BlockPos displayPos = displayList.get(i);
+        for (int i = 0; i < this.displayPosList.size(); i++) {
+            BlockPos displayPos = this.displayPosList.get(i);
             this.addGuiTextField(String.valueOf(displayPos.X), this.width / 2 - 50, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(String.valueOf(displayPos.Y), this.width / 2 - 15, nHeight, Byte.MAX_VALUE, 30);
             this.addGuiTextField(String.valueOf(displayPos.Z), this.width / 2 + 20, nHeight, Byte.MAX_VALUE, 30);
