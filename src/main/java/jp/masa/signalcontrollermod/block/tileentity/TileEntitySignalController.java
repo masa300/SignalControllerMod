@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TileEntitySignalController extends TileEntityCustom {
@@ -24,8 +24,8 @@ public class TileEntitySignalController extends TileEntityCustom {
 
     public TileEntitySignalController() {
         this.signalType = SignalType.signal3;
-        this.nextSignal = new ArrayList<BlockPos>(Arrays.asList(new BlockPos(0, 0, 0)));
-        this.displayPos = new ArrayList<BlockPos>(Arrays.asList(new BlockPos(0, 0, 0)));
+        this.nextSignal = Collections.singletonList(new BlockPos(0, 0, 0));
+        this.displayPos = Collections.singletonList(new BlockPos(0, 0, 0));
         this.above = false;
         this.last = false;
         this.repeat = false;
@@ -135,7 +135,6 @@ public class TileEntitySignalController extends TileEntityCustom {
             if (displayPosSize != 0) {
                 for (int i = 0; i < displayPosSize; i++) {
                     this.displayPos.add(BlockPos.fromIntArray(this.getIntArray(nbt, "displayPos" + i)));
-
                 }
             }
         }
