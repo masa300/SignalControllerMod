@@ -5,6 +5,7 @@ import jp.masa.signalcontrollermod.utils.BlockPos;
 import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -109,24 +110,37 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.last = nbt.getBoolean("last");
         this.repeat = nbt.getBoolean("repeat");
         this.reducedSpeed = nbt.getBoolean("reducedSpeed");
-        // nextSignal
-        int nextSignalSize = nbt.getInteger("nextSignalSize");
-        if (nextSignalSize == 0) {
-            this.nextSignal.add(this.getBlockPos(nbt, "nextSignal0"));
-        } else {
-            this.nextSignal.clear();
-            for (int i = 0; i < nextSignalSize; i++) {
-                this.nextSignal.add(this.getBlockPos(nbt, "nextSignal" + i));
+        if (nbt.hasKey("nextSignalList") && nbt.hasKey("displayPosList")) {
+            // nextSignal
+            NBTTagList nextSignalList = nbt.getTagList("nextSignalList", 10);
+            for (int i = 0; i < nextSignalList.tagCount(); i++) {
+                NBTTagCompound tag = nextSignalList.getCompoundTagAt(i);
+                this.nextSignal.add(BlockPos.readFromNBT(tag));
             }
-        }
-        // displayPos
-        int displayPosSize = nbt.getInteger("displayPosSize");
-        if (displayPosSize == 0) {
-            this.displayPos.add(this.getBlockPos(nbt, "displayPos"));
+            // displayPos
+            NBTTagList displayPosList = nbt.getTagList("displayPosList", 10);
+            for (int i = 0; i < displayPosList.tagCount(); i++) {
+                NBTTagCompound tag = nextSignalList.getCompoundTagAt(i);
+                this.displayPos.add(BlockPos.readFromNBT(tag));
+            }
         } else {
-            this.displayPos.clear();
-            for (int i = 0; i < displayPosSize; i++) {
-                this.displayPos.add(this.getBlockPos(nbt, "displayPos" + i));
+            int nextSignalSize = nbt.getInteger("nextSignalSize");
+            if (nextSignalSize == 0) {
+                this.nextSignal.add(BlockPos.fromIntArray(this.getIntArray(nbt, "nextSignal0")));
+            } else {
+                for (int i = 0; i < nextSignalSize; i++) {
+                    this.nextSignal.add(BlockPos.fromIntArray(this.getIntArray(nbt, "nextSignal" + i)));
+                }
+            }
+            // displayPos
+            int displayPosSize = nbt.getInteger("displayPosSize");
+            if (displayPosSize == 0) {
+                this.displayPos.add(BlockPos.fromIntArray(this.getIntArray(nbt, "displayPos")));
+            } else {
+                for (int i = 0; i < displayPosSize; i++) {
+                    this.displayPos.add(BlockPos.fromIntArray(this.getIntArray(nbt, "displayPos" + i)));
+
+                }
             }
         }
         this.above = nbt.getBoolean("above");
@@ -140,31 +154,21 @@ public class TileEntitySignalController extends TileEntityCustom {
         nbt.setBoolean("repeat", this.repeat);
         nbt.setBoolean("reducedSpeed", this.reducedSpeed);
         // nextSignal
-        int nextSignalSize = this.nextSignal.size();
-        nbt.setInteger("nextSignalSize", nextSignalSize);
-        for (int i = 0; i < nextSignalSize; i++) {
-            BlockPos bp = this.nextSignal.get(i);
-            nbt.setInteger("nextSignal" + i + "X", bp.X);
-            nbt.setInteger("nextSignal" + i + "Y", bp.Y);
-            nbt.setInteger("nextSignal" + i + "Z", bp.Z);
-        }
+        NBTTagList nextSignalList = new NBTTagList();
+        this.nextSignal.forEach(blockPos -> nextSignalList.appendTag(BlockPos.writeToNBT(blockPos)));
+        nbt.setTag("nextSignalList", nextSignalList);
+
         // displayPos
-        int displayPosSize = this.displayPos.size();
-        nbt.setInteger("displayPosSize", displayPosSize);
-        for (int i = 0; i < displayPosSize; i++) {
-            BlockPos bp = this.displayPos.get(i);
-            nbt.setInteger("displayPos" + i + "X", bp.X);
-            nbt.setInteger("displayPos" + i + "Y", bp.Y);
-            nbt.setInteger("displayPos" + i + "Z", bp.Z);
-        }
+        NBTTagList displayPosList = new NBTTagList();
+        this.displayPos.forEach(blockPos -> displayPosList.appendTag(BlockPos.writeToNBT(blockPos)));
+        nbt.setTag("displayPosList", displayPosList);
+
         nbt.setBoolean("above", this.above);
     }
 
-    private BlockPos getBlockPos(NBTTagCompound nbt, String key) {
-        int x = nbt.getInteger(key + "X");
-        int y = nbt.getInteger(key + "Y");
-        int z = nbt.getInteger(key + "Z");
-        return new BlockPos(x, y, z);
+    private int[] getIntArray(NBTTagCompound nbt, String key) {
+        int[] intArray = nbt.getIntArray(key);
+        return intArray.length == 0 ? new int[3] : intArray;
     }
 
     public SignalType getSignalType() {
