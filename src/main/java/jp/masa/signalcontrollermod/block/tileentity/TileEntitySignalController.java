@@ -4,6 +4,7 @@ import jp.masa.signalcontrollermod.gui.signalcontroller.SignalType;
 import jp.ngt.ngtlib.util.NGTUtil;
 import jp.ngt.rtm.electric.TileEntitySignal;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -116,16 +117,20 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         this.repeat = nbt.getBoolean("repeat");
         this.reducedSpeed = nbt.getBoolean("reducedSpeed");
         // nextSignal
-        int nextSignalSize = nbt.getInteger("nextSignalSize");
-        this.nextSignal = new ArrayList<>();
-        for (int i = 0; i < nextSignalSize; i++) {
-            this.nextSignal.add(BlockPos.fromLong(nbt.getLong("nextSignal" + i)));
+        NBTTagList nextSignalList = nbt.getTagList("nextSignalList", 10);
+        this.nextSignal.clear();
+        for (int i = 0; i < nextSignalList.tagCount(); i++) {
+            NBTTagCompound tag = nextSignalList.getCompoundTagAt(i);
+            BlockPos blockPos = BlockPos.fromLong(tag.getLong("pos"));
+            this.nextSignal.add(blockPos);
         }
         // displayPos
-        int displayPosSize = nbt.getInteger("displayPosSize");
-        this.displayPos = new ArrayList<>();
-        for (int i = 0; i < displayPosSize; i++) {
-            this.displayPos.add(BlockPos.fromLong(nbt.getLong("displayPos" + i)));
+        NBTTagList displayPosList = nbt.getTagList("displayPosList", 10);
+        this.displayPos.clear();
+        for (int i = 0; i < displayPosList.tagCount(); i++) {
+            NBTTagCompound tag = displayPosList.getCompoundTagAt(i);
+            BlockPos blockPos = BlockPos.fromLong(tag.getLong("pos"));
+            this.displayPos.add(blockPos);
         }
         this.above = nbt.getBoolean("above");
     }
@@ -138,17 +143,22 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         nbt.setBoolean("repeat", this.repeat);
         nbt.setBoolean("reducedSpeed", this.reducedSpeed);
         // nextSignal
-        int nextSignalSize = this.nextSignal.size();
-        nbt.setInteger("nextSignalSize", nextSignalSize);
-        for (int i = 0; i < nextSignalSize; i++) {
-            nbt.setLong("nextSignal" + i, this.nextSignal.get(i).toLong());
-        }
+        NBTTagList nextSignalList = new NBTTagList();
+        this.nextSignal.forEach(blockPos -> {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setLong("pos", blockPos.toLong());
+            nextSignalList.appendTag(nbt);
+        });
+        nbt.setTag("nextSignalList", nextSignalList);
         // displayPos
-        int displayPosSize = this.displayPos.size();
-        nbt.setInteger("displayPosSize", displayPosSize);
-        for (int i = 0; i < displayPosSize; i++) {
-            nbt.setLong("displayPos" + i, this.displayPos.get(i).toLong());
-        }
+        NBTTagList displayPosList = new NBTTagList();
+        this.displayPos.forEach(blockPos -> {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setLong("pos", blockPos.toLong());
+            displayPosList.appendTag(nbt);
+        });
+        nbt.setTag("displayPosList", displayPosList);
+
         nbt.setBoolean("above", this.above);
         return nbt;
     }
