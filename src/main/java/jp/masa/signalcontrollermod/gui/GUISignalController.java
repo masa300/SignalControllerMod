@@ -65,12 +65,16 @@ public class GUISignalController extends GuiScreenCustom {
         for (int i = 0; i < this.displayPosList.size(); i++) {
             this.fontRendererObj.drawString("displayPos" + i, this.width / 2 - 120, nHeight += 25, 0xffffff);
         }
-        this.fontRendererObj.drawString("above", this.width / 2 - 120, nHeight += 25, 0xffffff);
+        if (this.above) {
+            this.fontRendererObj.drawString("above", this.width / 2 - 120, nHeight += 25, 0xffffff);
+        }
 
         for (Object o : this.buttonList) {
             GuiButton button = (GuiButton) o;
             if (button.id == 1) {
                 button.displayString = I18n.format("SignalControllerMod.gui.signalType." + this.signalType.toString());
+            } else if (button.id == 1000) {
+                button.visible = this.above;
             }
         }
     }
@@ -120,7 +124,7 @@ public class GUISignalController extends GuiScreenCustom {
     public void keyTyped(char par1, int par2) {
         super.keyTyped(par1, par2);
         this.textFieldList.forEach(textField -> textField.textboxKeyTyped(par1, par2));
-        if(par2  == Keyboard.KEY_RETURN){
+        if (par2 == Keyboard.KEY_RETURN) {
             this.sendPacket();
             this.mc.displayGuiScreen(null);
         }
