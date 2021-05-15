@@ -21,7 +21,6 @@ public class GUISignalController extends GuiScreenCustom {
     private SignalType signalType;
     private final List<BlockPos> nextSignalList;
     private final List<BlockPos> displayPosList;
-    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -32,7 +31,6 @@ public class GUISignalController extends GuiScreenCustom {
         this.signalType = tile.getSignalType();
         this.nextSignalList = tile.getNextSignal();
         this.displayPosList = tile.getDisplayPos();
-        this.above = tile.isAbove();
         this.last = tile.isLast();
         this.repeat = tile.isRepeat();
         this.reducedSpeed = tile.isReducedSpeed();
@@ -65,16 +63,10 @@ public class GUISignalController extends GuiScreenCustom {
         for (int i = 0; i < this.displayPosList.size(); i++) {
             this.fontRenderer.drawString("displayPos" + i, this.width / 2 - 120, nHeight += 25, 0xffffff);
         }
-        if (this.above) {
-            this.fontRenderer.drawString("above", this.width / 2 - 120, nHeight += 25, 0xffffff);
-        }
 
-        for (Object o : this.buttonList) {
-            GuiButton button = (GuiButton) o;
+        for (GuiButton button : this.buttonList) {
             if (button.id == 1) {
                 button.displayString = I18n.format("SignalControllerMod.gui.signalType." + this.signalType.toString());
-            } else if (button.id == 1000) {
-                button.visible = this.above;
             }
         }
     }
@@ -116,8 +108,6 @@ public class GUISignalController extends GuiScreenCustom {
             }
             nHeight += 25;
         }
-//        nHeight += 25;
-        this.buttonList.add(new GuiCheckBox(1000, this.width / 2 - 6, nHeight + 5, "", this.above));
     }
 
     // キーボード入力時のevent
@@ -181,8 +171,7 @@ public class GUISignalController extends GuiScreenCustom {
                 this.repeat,
                 this.reducedSpeed,
                 this.nextSignalList,
-                this.displayPosList,
-                this.above
+                this.displayPosList
         ));
     }
 
@@ -204,7 +193,6 @@ public class GUISignalController extends GuiScreenCustom {
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 1),
                     this.getIntGuiTextFieldText(nextSignalSize * 3 + 3 * i + 2)));
         }
-        this.above = ((GuiCheckBox) this.buttonList.get(this.buttonList.size() - 1)).isChecked();
     }
 
     private int getIntGuiTextFieldText(int number) {

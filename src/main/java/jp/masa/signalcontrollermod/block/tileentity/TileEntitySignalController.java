@@ -17,7 +17,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
     private SignalType signalType;
     private List<BlockPos> nextSignal;
     private List<BlockPos> displayPos;
-    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -28,7 +27,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         this.nextSignal.add(BlockPos.ORIGIN);
         this.displayPos = new ArrayList<>();
         this.displayPos.add(BlockPos.ORIGIN);
-        this.above = false;
         this.last = false;
         this.repeat = false;
         this.reducedSpeed = false;
@@ -60,11 +58,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
             if (signalLevel > MAXSIGNALLEVEL) signalLevel = MAXSIGNALLEVEL;
             if (isRSPowered) signalLevel = 1;
 
-            if (this.above) {
-                currentSignal = getSignalAbove(world);
-                if (currentSignal != null && (int) currentSignal != signalLevel) setSignalAbove(world, signalLevel);
-            }
-
             for (BlockPos blockPos : this.displayPos) {
                 currentSignal = getSignal(world, blockPos);
                 if (currentSignal != null && (int) currentSignal != signalLevel) {
@@ -85,27 +78,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         TileEntity tileEntity = world.getTileEntity(blockPos);
         if (tileEntity instanceof TileEntitySignal) {
             ((TileEntitySignal) tileEntity).setElectricity(blockPos.getX(), blockPos.getY(), blockPos.getZ(), level);
-        }
-    }
-
-    private Object getSignalAbove(World world) {
-        int searchMaxCount = 32;
-
-        if (world == null) return null;
-        for (int i = 1; i <= searchMaxCount; i++) {
-            TileEntity tileEntity = world.getTileEntity(this.pos.up(i));
-            if (tileEntity instanceof TileEntitySignal)
-                return NGTUtil.getField(TileEntitySignal.class, tileEntity, "signalLevel");
-        }
-        return null;
-    }
-
-    private void setSignalAbove(World world, int level) {
-        int searchMaxCount = 32;
-
-        if (world == null) return;
-        for (int i = 1; i <= searchMaxCount; i++) {
-            setSignal(world, this.pos.up(i), level);
         }
     }
 
@@ -132,7 +104,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
             BlockPos blockPos = BlockPos.fromLong(tag.getLong("pos"));
             this.displayPos.add(blockPos);
         }
-        this.above = nbt.getBoolean("above");
     }
 
     @Override
@@ -158,8 +129,6 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
             displayPosList.appendTag(nbt);
         });
         nbt.setTag("displayPosList", displayPosList);
-
-        nbt.setBoolean("above", this.above);
         return nbt;
     }
 
@@ -239,13 +208,5 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
 
     public void setReducedSpeed(boolean reducedSpeed) {
         this.reducedSpeed = reducedSpeed;
-    }
-
-    public boolean isAbove() {
-        return above;
-    }
-
-    public void setAbove(boolean above) {
-        this.above = above;
     }
 }
