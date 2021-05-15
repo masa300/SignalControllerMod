@@ -19,6 +19,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
     private SignalType signalType;
     private List<BlockPos> nextSignal;
     private List<BlockPos> displayPos;
+    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -27,7 +28,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
 
     }
 
-    public PacketSignalController(TileEntity tileEntity, SignalType signalType, boolean last, boolean repeat, boolean reducedSpeed, List<BlockPos> nextSignal, List<BlockPos> displayPos) {
+    public PacketSignalController(TileEntity tileEntity, SignalType signalType, boolean last, boolean repeat, boolean reducedSpeed, List<BlockPos> nextSignal, List<BlockPos> displayPos, boolean above) {
         super(tileEntity);
         this.signalType = signalType;
         this.last = last;
@@ -35,6 +36,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         this.reducedSpeed = reducedSpeed;
         this.nextSignal = nextSignal;
         this.displayPos = displayPos;
+        this.above = above;
     }
 
     @Override
@@ -55,6 +57,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
             buffer.writeInt(pos.Y);
             buffer.writeInt(pos.Z);
         }
+        buffer.writeBoolean(this.above);
     }
 
     @Override
@@ -79,6 +82,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
             int Z = buffer.readInt();
             this.displayPos.add(new BlockPos(X, Y, Z));
         }
+        this.above = buffer.readBoolean();
     }
 
     //ここ鯖
@@ -92,6 +96,7 @@ public class PacketSignalController extends PacketTileEntity implements IMessage
         tile.setReducedSpeed(message.reducedSpeed);
         tile.setNextSignal(message.nextSignal);
         tile.setDisplayPos(message.displayPos);
+        tile.setAbove(message.above);
         NGTUtil.sendPacketToClient(tile);
         tile.markDirty();
         return null;
