@@ -17,7 +17,6 @@ public class TileEntitySignalController extends TileEntityCustom {
     private SignalType signalType;
     private List<BlockPos> nextSignal;
     private List<BlockPos> displayPos;
-    private boolean above;
     private boolean last;
     private boolean repeat;
     private boolean reducedSpeed;
@@ -26,7 +25,6 @@ public class TileEntitySignalController extends TileEntityCustom {
         this.signalType = SignalType.signal3;
         this.nextSignal = new ArrayList<>(Collections.singletonList(new BlockPos(0, 0, 0)));
         this.displayPos = new ArrayList<>(Collections.singletonList(new BlockPos(0, 0, 0)));
-        this.above = false;
         this.last = false;
         this.repeat = false;
         this.reducedSpeed = false;
@@ -58,15 +56,6 @@ public class TileEntitySignalController extends TileEntityCustom {
             if (signalLevel > MAXSIGNALLEVEL) signalLevel = MAXSIGNALLEVEL;
             if (isRSPowered) signalLevel = 1;
 
-            if (this.above) {
-                int aboveY = this.searchSignalAboveY(world);
-                if (1 <= aboveY) {
-                    currentSignal = getSignal(world, this.xCoord, aboveY, this.zCoord);
-                    if (currentSignal != null && (int) currentSignal != signalLevel)
-                        setSignal(world, this.xCoord, aboveY, this.zCoord, signalLevel);
-                }
-            }
-
             for (BlockPos pos : this.displayPos) {
                 if (!(pos.X == 0 && pos.Y == 0 && pos.Z == 0)) {
                     currentSignal = getSignal(world, pos.X, pos.Y, pos.Z);
@@ -90,17 +79,6 @@ public class TileEntitySignalController extends TileEntityCustom {
         if (tileEntity instanceof TileEntitySignal) {
             ((TileEntitySignal) tileEntity).setElectricity(x, y, z, level);
         }
-    }
-
-    private int searchSignalAboveY(World world) {
-        int searchMaxCount = 32;
-
-        for (int i = 1; i <= searchMaxCount; i++) {
-            int y = this.yCoord + i;
-            TileEntity tileEntity = world.getTileEntity(this.xCoord, y, this.zCoord);
-            if (tileEntity instanceof TileEntitySignal) return y;
-        }
-        return 0;
     }
 
     @Override
@@ -140,7 +118,6 @@ public class TileEntitySignalController extends TileEntityCustom {
                 }
             }
         }
-        this.above = nbt.getBoolean("above");
     }
 
     @Override
@@ -159,8 +136,6 @@ public class TileEntitySignalController extends TileEntityCustom {
         NBTTagList displayPosList = new NBTTagList();
         this.displayPos.forEach(blockPos -> displayPosList.appendTag(BlockPos.writeToNBT(blockPos)));
         nbt.setTag("displayPosList", displayPosList);
-
-        nbt.setBoolean("above", this.above);
     }
 
     private int[] getIntArray(NBTTagCompound nbt, String key) {
@@ -242,13 +217,5 @@ public class TileEntitySignalController extends TileEntityCustom {
 
     public void setReducedSpeed(boolean reducedSpeed) {
         this.reducedSpeed = reducedSpeed;
-    }
-
-    public boolean isAbove() {
-        return above;
-    }
-
-    public void setAbove(boolean above) {
-        this.above = above;
     }
 }
