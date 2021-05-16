@@ -118,7 +118,7 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         this.nextSignal.forEach(blockPos -> {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setLong("pos", blockPos.toLong());
-            nextSignalList.appendTag(nbt);
+            nextSignalList.appendTag(tag);
         });
         nbt.setTag("nextSignalList", nextSignalList);
         // displayPos
@@ -126,7 +126,7 @@ public class TileEntitySignalController extends TileEntityCustom implements ITic
         this.displayPos.forEach(blockPos -> {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setLong("pos", blockPos.toLong());
-            displayPosList.appendTag(nbt);
+            displayPosList.appendTag(tag);
         });
         nbt.setTag("displayPosList", displayPosList);
         return nbt;
