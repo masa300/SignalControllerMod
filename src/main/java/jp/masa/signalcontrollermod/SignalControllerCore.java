@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod(modid = SignalControllerCore.MODID, version = SignalControllerCore.VERSION, name = SignalControllerCore.MODID)
 public class SignalControllerCore {
     public static final String MODID = "signalcontrollermod";
-    public static final String VERSION = "1.3.0";
+    public static final String VERSION = "1.4.0";
 
 
     public static Block SIGNAL_CONTROLLER_BLOCK = new SignalController();
