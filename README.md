@@ -15,7 +15,7 @@
   Minecraft ForgeやRealTrainModの導入方法はここでは説明しません。ご自身でお調べください。  
   
 # 導入方法
-  1. Minecraft FrogeとRealTrainModを導入
+  1. Minecraft ForgeとRealTrainModを導入
   1. [こちら](https://github.com/masa300/SignalControllerMod/releases/latest)からSignalControllerMod-vX.X.X.jarをダウンロードする
   1. ダウンロードしたMOD(jarファイル)をmodsフォルダーに入れる
   1. MODの導入が成功すると、クリエイティブタブにSignalControllerのタブが追加されます。
@@ -77,7 +77,7 @@
 # 履歴
 |日付|バージョン|説明|備考|
 |:---:|:---:|:---|:---|
-|2021/05/16|SignalControllerMod-v1.4.0|まれに座標登録時にクラッシュするバグを修正、aboveを新規登録できなった、GUI内で座標が2個以上あれば1個目でも消せるようになった||
+|2021/05/16|SignalControllerMod-v1.4.0|まれに座標登録時にクラッシュするバグを修正<br>aboveを新規登録できなくなった<br>GUI内で座標が2個以上あれば1個目でも消せるようになった||
 |2021/03/22|SignalControllerMod-v1.3.1|まれに座標登録時にクラッシュしてワールドに入れなくなるバグを修正||
 |2021/02/15|SignalControllerMod-v1.3.0|終端機能、並行現示機能追加、displayPosを複数登録可能になった||
 |2020/12/25|SignalControllerMod-v1.2.1|座標設定が保存されないバグを修正|正式リリース開始|
