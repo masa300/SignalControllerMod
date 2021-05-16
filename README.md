@@ -1,5 +1,6 @@
 # Signal Controller Mod
   [![MCVer](https://img.shields.io/badge/Minecraft-1.7.10-brightgreen)](https://www.minecraft.net/)
+  [![MCVer](https://img.shields.io/badge/Minecraft-1.12.2-brightgreen)](https://www.minecraft.net/)
   [![ForgeVer](https://img.shields.io/badge/Forge-10.13.4.1558-important)](https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_1.7.10.html)
   [![RTMVer](https://img.shields.io/badge/RealTrainMod-1.7.10.41-informational)](https://www.curseforge.com/minecraft/mc-mods/realtrainmod/files/3039063)  
   [![DLCount](https://img.shields.io/github/downloads/masa300/SignalControllerMod/total)](https://github.com/masa300/SignalControllerMod/releases)
