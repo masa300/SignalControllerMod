@@ -46,22 +46,24 @@ public class ItemPosSettingTool extends Item {
                 if (itemStack.hasTagCompound()) {
                     NBTTagCompound tag = itemStack.getTagCompound();
                     int[] pos = tag.getIntArray("pos");
-                    if (itemStack.getItemDamage() == 0) {
-                        boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(new BlockPos(pos[0], pos[1], pos[2]));
-                        if (added) {
-                            NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
-                        }else{
-                            NGTLog.sendChatMessage(player,"NextSignal already added");
+                    if (pos.length == 3) {
+                        if (itemStack.getItemDamage() == 0) {
+                            boolean added = ((TileEntitySignalController) tileEntity).addNextSignal(new BlockPos(pos[0], pos[1], pos[2]));
+                            if (added) {
+                                NGTLog.sendChatMessage(player, String.format("NextSignal added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                            } else {
+                                NGTLog.sendChatMessage(player, "NextSignal already added");
+                            }
+                        } else if (itemStack.getItemDamage() == 1) {
+                            boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(new BlockPos(pos[0], pos[1], pos[2]));
+                            if (added) {
+                                NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
+                            } else {
+                                NGTLog.sendChatMessage(player, "DisplayPos already added");
+                            }
                         }
-                    } else if (itemStack.getItemDamage() == 1) {
-                        boolean added = ((TileEntitySignalController) tileEntity).addDisplayPos(new BlockPos(pos[0], pos[1], pos[2]));
-                        if(added) {
-                            NGTLog.sendChatMessage(player, String.format("DisplayPos added (%s, %s ,%s)!", pos[0], pos[1], pos[2]));
-                        } else {
-                            NGTLog.sendChatMessage(player,"DisplayPos already added");
-                        }
+                        NGTUtil.sendPacketToClient(tileEntity);
                     }
-                    NGTUtil.sendPacketToClient(tileEntity);
                 }
             }
         }
