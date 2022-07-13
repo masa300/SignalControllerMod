@@ -73,7 +73,7 @@
   この場を借りて御礼申し上げます。
 
 # 連絡先
-  Twitter: [@masa0300](https://twitter.com/masa0300)
+  Twitter: [@masa300_fmkr](https://twitter.com/masa300_fmkr)
 
 # 履歴
 |日付|バージョン|説明|備考|
